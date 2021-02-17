@@ -4,6 +4,7 @@
   "version": "0.0.1-alpha3",
   "description": "A javascript api to control your Novation launchpads",
   "main": "src/index.js",
+  "types": "types/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

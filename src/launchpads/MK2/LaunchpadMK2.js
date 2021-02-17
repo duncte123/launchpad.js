@@ -11,6 +11,10 @@ export default class LaunchpadMK2 extends EventEmitter {
   #output;
   #options;
 
+  /**
+   *
+   * @param {LaunchpadMK2Options?} options
+   */
   constructor(options = {}) {
     super();
 
@@ -50,10 +54,8 @@ export default class LaunchpadMK2 extends EventEmitter {
 
   #setupMessageHandler() {
     this.#input.on('message', (deltaTime, message) => {
-      setImmediate(() => {
-        this.#logDebug(`m: ${message} d: ${deltaTime}`);
-        this.#internalMessageHandler(message);
-      });
+      this.#logDebug(`m: ${message} d: ${deltaTime}`);
+      this.#internalMessageHandler(message);
     });
   }
 
@@ -90,8 +92,22 @@ export default class LaunchpadMK2 extends EventEmitter {
     this.#output.sendMessage(sysExMessage);
   }
 
-  setButtonColor(led, [r, g, b]) {
-    this.sendSysEx(11, led, r, g, b);
+  /**
+   * Sets the color for a button on the Launchpad
+   *
+   * @param {number} button
+   * @param {Array<number>} color
+   *
+   * @throws Error If the color supplied is invalid
+   */
+  setButtonColor(button, color) {
+    if (!Array.isArray(color) || color.some(value => value > 63 || value < 0)) {
+      throw new Error('Invalid color settings supplied');
+    }
+
+    const [r, g, b] = color;
+
+    this.sendSysEx(11, button, r, g, b);
   }
 
   /**
