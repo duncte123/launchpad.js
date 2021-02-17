@@ -1,14 +1,13 @@
 import midi from 'midi';
-import EventEmitter from 'eventemitter3';
 import { findDevice, onExit } from '../../utils.js';
+import BaseLaunchpad from '../BaseLaunchpad.js';
 
 // TODO:
-//  make abstract class for base launchpad
 //  Support for other launchpads
 
-export default class LaunchpadMK2 extends EventEmitter {
-  #input;
-  #output;
+export default class LaunchpadMK2 extends BaseLaunchpad {
+  #input = new midi.Input();
+  #output = new midi.Output();
   #options;
 
   /**
@@ -22,9 +21,6 @@ export default class LaunchpadMK2 extends EventEmitter {
       deviceName: /^Launchpad MK2/,
       debug: false,
     }, options);
-
-    this.#input = new midi.Input();
-    this.#output = new midi.Output();
 
     const deviceName = this.#options.deviceName;
 
@@ -52,6 +48,73 @@ export default class LaunchpadMK2 extends EventEmitter {
     });
   }
 
+  /**
+   * @inheritDoc
+   */
+  send(...message) {
+    this.#logDebug('Sending midi message', message);
+    this.#output.sendMessage(Array.isArray(message[0]) ? message[0] : message);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  sendSysEx(...message) {
+    const arrayParsed = Array.isArray(message[0]) ? message[0] : message;
+    const sysExMessage = [
+      240, 0, 32, 41, 2, 24,
+      ...arrayParsed,
+      247
+    ];
+
+    this.#logDebug('Sending sysExMessage', sysExMessage);
+
+    this.#output.sendMessage(sysExMessage);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setButtonColor(button, color) {
+    if (!Array.isArray(color) || color.some(value => value > 63 || value < 0)) {
+      throw new Error('Invalid color settings supplied');
+    }
+
+    const [r, g, b] = color;
+
+    this.sendSysEx(11, button, r, g, b);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  allOff() {
+    this.sendSysEx(14, 0);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  closePorts() {
+    this.#logDebug('Closing ports');
+
+    this.allOff();
+    this.#input.closePort();
+    this.#output.closePort();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  eventNames() {
+    return [
+      'ready',
+      'rawMessage',
+      'buttonDown',
+      'buttonUp',
+    ];
+  }
+
   #setupMessageHandler() {
     this.#input.on('message', (deltaTime, message) => {
       this.#logDebug(`m: ${message} d: ${deltaTime}`);
@@ -68,78 +131,9 @@ export default class LaunchpadMK2 extends EventEmitter {
     this.emit(`button${upDown}`, note, value);
   }
 
-  send(...message) {
-    this.#logDebug('Sending midi message', message);
-    this.#output.sendMessage(Array.isArray(message[0]) ? message[0] : message);
-  }
-
-  /**
-   * Send a System Exclusive message to the launchpad.
-   * <br> The header and terminator have already been put in place by this method.
-   *
-   * @param message The 6th byte + 4 values for the SysEx message
-   */
-  sendSysEx(...message) {
-    const arrayParsed = Array.isArray(message[0]) ? message[0] : message;
-    const sysExMessage = [
-      240, 0, 32, 41, 2, 24,
-      ...arrayParsed,
-      247
-    ];
-
-    this.#logDebug('Sending sysExMessage', sysExMessage);
-
-    this.#output.sendMessage(sysExMessage);
-  }
-
-  /**
-   * Sets the color for a button on the Launchpad
-   *
-   * @param {number} button
-   * @param {Array<number>} color
-   *
-   * @throws Error If the color supplied is invalid
-   */
-  setButtonColor(button, color) {
-    if (!Array.isArray(color) || color.some(value => value > 63 || value < 0)) {
-      throw new Error('Invalid color settings supplied');
-    }
-
-    const [r, g, b] = color;
-
-    this.sendSysEx(11, button, r, g, b);
-  }
-
-  /**
-   * Turns all the lights on the launchpad off
-   */
-  allOff() {
-    this.sendSysEx(14, 0);
-  }
-
   #logDebug(...message) {
     if (this.#options.debug) {
       console.log('[Launchpad Debug]', ...message);
     }
-  }
-
-  /**
-   * Closes the connection with the launchpad
-   */
-  closePorts() {
-    this.#logDebug('Closing ports');
-
-    this.allOff();
-    this.#input.closePort();
-    this.#output.closePort();
-  }
-
-  eventNames() {
-    return [
-      'ready',
-      'rawMessage',
-      'buttonDown',
-      'buttonUp',
-    ];
   }
 }
