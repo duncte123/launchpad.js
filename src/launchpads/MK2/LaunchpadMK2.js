@@ -16,7 +16,6 @@ export default class LaunchpadMK2 extends EventEmitter {
 
     this.#options = Object.assign({}, {
       deviceName: /^Launchpad MK2/,
-      ignore0Velocity: true,
       debug: false,
     }, options);
 
@@ -31,7 +30,7 @@ export default class LaunchpadMK2 extends EventEmitter {
     ];
 
     if (inputPort === -1 || outputPort === -1) {
-      throw new Error(`could not find port # for ${deviceName}`);
+      throw new Error(`Could not find connected launchpad for name "${deviceName}"`);
     }
 
     onExit(() => this.closePorts());
@@ -63,7 +62,8 @@ export default class LaunchpadMK2 extends EventEmitter {
 
     const [status, note, value] = message;
 
-    // TODO
+    const upDown = Boolean(value) ? 'Down' : 'Up';
+    this.emit(`button${upDown}`, note, value);
   }
 
   send(...message) {
@@ -88,6 +88,10 @@ export default class LaunchpadMK2 extends EventEmitter {
     this.#logDebug('Sending sysExMessage', sysExMessage);
 
     this.#output.sendMessage(sysExMessage);
+  }
+
+  setButtonColor(led, [r, g, b]) {
+    this.sendSysEx(11, led, r, g, b);
   }
 
   /**

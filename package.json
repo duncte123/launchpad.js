@@ -1,7 +1,7 @@
 {
   "name": "launchpad.js",
   "type": "module",
-  "version": "0.0.1-alpha2",
+  "version": "0.0.1-alpha3",
   "description": "A javascript api to control your Novation launchpads",
   "main": "src/index.js",
   "scripts": {
@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/duncte123/launchpad.js#readme",
   "dependencies": {
+    "color-convert": "^2.0.1",
     "eventemitter3": "^4.0.7",
     "midi": "github:Cycling74/node-midi"
   }
