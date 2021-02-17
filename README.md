@@ -15,6 +15,11 @@ Some sample programs can be found in the [examples folder](./examples).
 ### Launchpad models currently supported
 - Launchpad MK2
 
+##### Why are only these launchpads supported?
+These launchpads are supported because I own them myself and have been able to test them.
+If a launchpad is not listed here it means that I do not own one and have not been able to test that one with the program.
+
+
 
 ### Notice
 This project contains modified code from https://github.com/Lokua/launchpad which was released under the MIT license
