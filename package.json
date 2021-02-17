@@ -1,6 +1,7 @@
 {
   "name": "launchpad.js",
-  "version": "0.0.1-alpha1",
+  "type": "module",
+  "version": "0.0.1-alpha2",
   "description": "A javascript api to control your Novation launchpads",
   "main": "src/index.js",
   "scripts": {
@@ -17,9 +18,13 @@
     "lp"
   ],
   "author": "Duncan Sterken",
-  "license": "GNU-3.0",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/duncte123/launchpad.js/issues"
   },
-  "homepage": "https://github.com/duncte123/launchpad.js#readme"
+  "homepage": "https://github.com/duncte123/launchpad.js#readme",
+  "dependencies": {
+    "eventemitter3": "^4.0.7",
+    "midi": "github:Cycling74/node-midi"
+  }
 }
