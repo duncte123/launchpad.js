@@ -17,6 +17,8 @@ Some sample programs can be found in the [examples folder](./examples).
 These launchpads are supported because I own them myself and have been able to test them.
 If a launchpad is not listed here it means that I do not own one and have not been able to test that one with the program.
 
+### Links
+Launchpad developer manual: https://resource.novationmusic.com/support/product-downloads?product=Launchpad
 
 
 ### Notice

@@ -50,6 +50,32 @@ export default class BaseLaunchpad extends EventEmitter {
   }
 
   /**
+   * Tells the launchpad to start flashing a button between the current color and {@param color}<br>
+   *   <b>IMPORTANT:</b> flashing and pulsing only works for buttons that are on the grid
+   *
+   * @param {number} button The grid button to start flashing
+   * @param {number} color A color from the primary color chart, result to your launchpad's programming manual for more info
+   *
+   * @abstract
+   */
+  flash(button, color) {
+    BaseLaunchpad.#abstract('flash');
+  }
+
+  /**
+   * Tells the launchpad to start pulsing a button between the current color and {@param color}<br>
+   *   <b>IMPORTANT:</b> flashing and pulsing only works for buttons that are on the grid
+   *
+   * @param {number} button The grid button to start flashing
+   * @param {number} color A color from the primary color chart, result to your launchpad's programming manual for more info
+   *
+   * @abstract
+   */
+  pulse(button, color) {
+    BaseLaunchpad.#abstract('pulse');
+  }
+
+  /**
    * Turns all the lights on the launchpad off
    *
    * @abstract

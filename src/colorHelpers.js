@@ -5,7 +5,7 @@ export const defaultColors = {
   red: [63, 0, 0],
   green: [0, 63, 0],
   blue: [0, 0, 63],
-  orange: [ 63, 17, 0],
+  orange: [63, 17, 0],
 };
 
 function scaleBetween(unscaledNum, minAllowed, maxAllowed, min, max) {
