@@ -88,6 +88,28 @@ export default class LaunchpadMK2 extends BaseLaunchpad {
   /**
    * @inheritDoc
    */
+  flash(button, color) {
+    if (color < 0 || color > 127) {
+      throw new Error('Color must be in range 0-127');
+    }
+
+    this.sendSysEx(35, 0, button, color);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  pulse(button, color) {
+    if (color < 0 || color > 127) {
+      throw new Error('Color must be in range 0-127');
+    }
+
+    this.sendSysEx(40, 0, button, color);
+  }
+
+  /**
+   * @inheritDoc
+   */
   allOff() {
     this.sendSysEx(14, 0);
   }

@@ -4,6 +4,8 @@ export interface BaseLaunchpad extends EventEmitter {
   send(...message: number[]): void;
   sendSysEx(...message: number[]): void;
   setButtonColor(button: number, color: number[]): void;
+  flash(button: number, color: number): void;
+  pulse(button: number, color: number): void;
 
   allOff(): void;
   closePorts(): void;

@@ -56,6 +56,8 @@ export default class BaseLaunchpad extends EventEmitter {
    * @param {number} button The grid button to start flashing
    * @param {number} color A color from the primary color chart, result to your launchpad's programming manual for more info
    *
+   * @throws {Error} if the color is out of the launchpad's range
+   *
    * @abstract
    */
   flash(button, color) {
@@ -68,6 +70,8 @@ export default class BaseLaunchpad extends EventEmitter {
    *
    * @param {number} button The grid button to start flashing
    * @param {number} color A color from the primary color chart, result to your launchpad's programming manual for more info
+   *
+   * @throws {Error} if the color is out of the launchpad's range
    *
    * @abstract
    */
