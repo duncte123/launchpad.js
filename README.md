@@ -23,6 +23,8 @@ More examples can be found in the [examples folder](./examples), this is just a 
 const lpJs = require('launchpad.js');
 const { colorFromHex, defaultColors } = lpJs.colors;
 
+const lp = new lpJs.LaunchpadMK2();
+
 lp.once('ready', (deviceName) => {
   console.log(`${deviceName} is ready!!`);
 
