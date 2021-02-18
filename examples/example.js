@@ -1,5 +1,5 @@
 import lpJs from '../src/index.js';
-import { colorFromHex, defaultColors } from '../src/colorHelpers.js';
+const { colorFromHex, defaultColors } = lpJs.colors;
 
 // upon connect the launchpad will be put into "Session" mode
 const lp = new lpJs.LaunchpadMK2({

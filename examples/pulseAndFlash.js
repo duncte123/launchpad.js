@@ -1,5 +1,5 @@
 import lpJs from '../src/index.js';
-import { colorFromHex } from '../src/colorHelpers.js';
+const { colorFromHex } = lpJs.colors;
 
 const lp = new lpJs.LaunchpadMK2();
 

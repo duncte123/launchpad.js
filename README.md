@@ -17,6 +17,33 @@ Some sample programs can be found in the [examples folder](./examples).
 These launchpads are supported because I own them myself and have been able to test them.
 If a launchpad is not listed here it means that I do not own one and have not been able to test that one with the program.
 
+### Examples
+More examples can be found in the [examples folder](./examples), this is just a simple button listener.
+```js
+const lpJs = require('launchpad.js');
+const { colorFromHex, defaultColors } = lpJs.colors;
+
+lp.once('ready', (deviceName) => {
+  console.log(`${deviceName} is ready!!`);
+
+  lp.on('buttonDown', (note, value) => {
+    // generate a random color on each button press
+    const randHex = Math.floor(Math.random() * 16777215).toString(16);
+    // we have the parse the colors to a special RGB value as
+    // the launchpad does not go from 0-255 but from 0-63 for each color
+    const color = colorFromHex(randHex);
+
+    console.log('Button pressed: ' + note);
+
+    lp.setButtonColor(note, color);
+  });
+
+  lp.on('buttonUp', (note, value) => {
+    lp.setButtonColor(note, defaultColors.off);
+  });
+});
+```
+
 ### Links
 Launchpad developer manual: https://resource.novationmusic.com/support/product-downloads?product=Launchpad
 
