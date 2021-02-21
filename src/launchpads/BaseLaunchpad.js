@@ -14,10 +14,13 @@ import EventEmitter from 'eventemitter3';
  *
  * @abstract
  */
+// cuz this is an abstract class
+/* eslint-disable no-unused-vars */
 export default class BaseLaunchpad extends EventEmitter {
+
   /**
    * Send a midi message to the launchpad
-   * @param message the message to send to the launchpad
+   * @param {number} message the message to send to the launchpad
    *
    * @abstract
    */
@@ -29,7 +32,7 @@ export default class BaseLaunchpad extends EventEmitter {
    * Send a System Exclusive message to the launchpad.
    * <br> The header and terminator have already been put in place by this method.
    *
-   * @param message The 6th byte + 4 values for the SysEx message
+   * @param {number} message The 6th byte + 4 values for the SysEx message
    *
    * @abstract
    */

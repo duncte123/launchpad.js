@@ -4,7 +4,6 @@ import BaseLaunchpad from '../BaseLaunchpad.js';
 
 // TODO:
 //  Support for other launchpads
-
 export default class LaunchpadMK2 extends BaseLaunchpad {
   #input = new midi.Input();
   #output = new midi.Output();
@@ -17,10 +16,11 @@ export default class LaunchpadMK2 extends BaseLaunchpad {
   constructor(options = {}) {
     super();
 
-    this.#options = Object.assign({}, {
+    this.#options = {
       deviceName: /^Launchpad MK2/,
       debug: false,
-    }, options);
+      ...options
+    };
 
     const deviceName = this.#options.deviceName;
 
@@ -147,7 +147,8 @@ export default class LaunchpadMK2 extends BaseLaunchpad {
   #internalMessageHandler(message) {
     this.emit('rawMessage', message);
 
-    const [status, note, value] = message;
+    // eslint-disable-next-line no-unused-vars
+    const [_, note, value] = message;
 
     const upDown = Boolean(value) ? 'Down' : 'Up';
     this.emit(`button${upDown}`, note, value);
