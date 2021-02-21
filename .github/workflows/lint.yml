@@ -14,5 +14,7 @@ jobs:
         name: Setup nodejs
         with:
           node-version: '14'
+      - name: install dependencies
+        run: npm ci
       - name: Run eslint
         run: npm run lint
