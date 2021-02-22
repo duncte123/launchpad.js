@@ -46,9 +46,12 @@ lp.once('ready', (deviceName) => {
 });
 ```
 
+## TODO:
+- Add grid system (no longer those weird numbers)
+- Add support for the same launchpads as launchpad.py
+
 ### Links
 Launchpad developer manual: https://resource.novationmusic.com/support/product-downloads?product=Launchpad
-
 
 ### Notice
 This project contains modified code from https://github.com/Lokua/launchpad which was released under the MIT license

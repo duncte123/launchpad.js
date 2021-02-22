@@ -27,7 +27,7 @@ export function onExit(fn) {
         manualExit = true;
         process.exit();
       }
-    }
+    };
   }
 }
 
