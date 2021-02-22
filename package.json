@@ -27,7 +27,7 @@
   "dependencies": {
     "color-convert": "^2.0.1",
     "eventemitter3": "^4.0.7",
-    "midi": "github:Cycling74/node-midi",
+    "midi": "git+https://github.com/Cycling74/node-midi.git",
     "segfault-handler": "^1.3.0"
   }
 }
