@@ -1,5 +1,5 @@
 import midi from 'midi';
-import { findDevice, onExit } from '../../utils.js';
+import { CONTROL_NOTE, findDevice, NORMAL_NOTE, onExit } from '../../utils.js';
 import BaseLaunchpad from '../BaseLaunchpad.js';
 
 // TODO:
@@ -19,6 +19,7 @@ export default class LaunchpadMK2 extends BaseLaunchpad {
     this.#options = {
       deviceName: /^Launchpad MK2/,
       debug: false,
+      xyMode: false,
       ...options
     };
 
@@ -81,8 +82,9 @@ export default class LaunchpadMK2 extends BaseLaunchpad {
     }
 
     const [r, g, b] = color;
+    const buttonMapped = this.mapButtonFromXy(button);
 
-    this.sendSysEx(11, button, r, g, b);
+    this.sendSysEx(11, buttonMapped, r, g, b);
   }
 
   /**
@@ -137,6 +139,56 @@ export default class LaunchpadMK2 extends BaseLaunchpad {
     ];
   }
 
+  /**
+   * @inheritDoc
+   */
+  parseButtonToXy(state, note) {
+    if (!this.#options.xyMode) {
+      return note;
+    }
+
+    // The top row is selected
+    if (state === CONTROL_NOTE && note >= 104) {
+      return [
+        note - 104, // x
+        0, // y
+      ];
+    }
+
+    if (state === NORMAL_NOTE) {
+      return [
+        // % 10 is because we want to have one more than the buttons in one row
+        // that way we get a number from 1 - 9
+        (note - 1) % 10, // x
+        Math.floor((99 - note) / 10), // y
+      ];
+    }
+
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  mapButtonFromXy([x, y]) {
+    if (!this.#options.xyMode) {
+      return x;
+    }
+
+    // top row
+    if (y === 0) {
+      // top row is 104 - 111
+      // making x = 0 == 104
+      return x + 104;
+    }
+
+    // the lowest button is 11 meaning we need to multiply y by 10
+    // we start at 91 because we are always subtracting at least 10
+    // we add x to get the correct column
+    // eslint-disable-next-line no-extra-parens
+    return 91 - (10 * y) + x;
+  }
+
   #setupMessageHandler() {
     this.#input.on('message', (deltaTime, message) => {
       this.#logDebug(`m: ${message} d: ${deltaTime}`);
@@ -147,11 +199,11 @@ export default class LaunchpadMK2 extends BaseLaunchpad {
   #internalMessageHandler(message) {
     this.emit('rawMessage', message);
 
-    // eslint-disable-next-line no-unused-vars
-    const [_, note, value] = message;
+    const [state, note, value] = message;
+    const button = this.parseButtonToXy(state, note);
 
     const upDown = Boolean(value) ? 'Down' : 'Up';
-    this.emit(`button${upDown}`, note, value);
+    this.emit(`button${upDown}`, button, value);
   }
 
   #logDebug(...message) {

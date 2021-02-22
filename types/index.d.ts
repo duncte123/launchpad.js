@@ -15,6 +15,7 @@ declare module  'launchpad.js' {
   export type LaunchpadMK2Options = {
     deviceName: RegExp,
     debug: boolean,
+    xyMode: boolean,
   };
 
   export interface LaunchpadMK2 extends BaseLaunchpad {

@@ -36,12 +36,12 @@ lp.once('ready', (name) => {
 
 lp.on('buttonDown', (note, value) => {
   // generate a random color on each button press
-  const randHex = Math.floor(Math.random()*16777215).toString(16);
+  const randHex = Math.floor(Math.random() * 16777215).toString(16);
   // we have the parse the colors to a special RGB value as
   // the launchpad does not go from 0-255 but from 0-63 for each color
   const color = colorFromHex(randHex);
 
-  console.log('Button pressed: ' + note);
+  console.log(`Button pressed: ${note}`);
 
   lp.setButtonColor(note, color);
 });

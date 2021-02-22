@@ -23,25 +23,26 @@ More examples can be found in the [examples folder](./examples), this is just a 
 const lpJs = require('launchpad.js');
 const { colorFromHex, defaultColors } = lpJs.colors;
 
-const lp = new lpJs.LaunchpadMK2();
+// we are enabling xyMode here
+const lp = new lpJs.LaunchpadMK2({ xyMode: true });
 
 lp.once('ready', (deviceName) => {
   console.log(`${deviceName} is ready!!`);
 
-  lp.on('buttonDown', (note, value) => {
+  lp.on('buttonDown', (button, value) => {
     // generate a random color on each button press
     const randHex = Math.floor(Math.random() * 16777215).toString(16);
     // we have the parse the colors to a special RGB value as
     // the launchpad does not go from 0-255 but from 0-63 for each color
     const color = colorFromHex(randHex);
 
-    console.log('Button pressed: ' + note);
+    console.log('Button pressed: ' + button);
 
-    lp.setButtonColor(note, color);
+    lp.setButtonColor(button, color);
   });
 
-  lp.on('buttonUp', (note, value) => {
-    lp.setButtonColor(note, defaultColors.off);
+  lp.on('buttonUp', (button, value) => {
+    lp.setButtonColor(button, defaultColors.off);
   });
 });
 ```
