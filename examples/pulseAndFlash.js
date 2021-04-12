@@ -1,4 +1,5 @@
-import lpJs from '../src/index.js';
+import lpJs from '../dist/index.js';
+
 const { colorFromHex } = lpJs.colors;
 
 const lp = new lpJs.LaunchpadMK2();
@@ -33,12 +34,10 @@ lp.on('buttonDown', (note, value) => {
 
     // reset the color to stop flashing
     lp.setButtonColor(note, offColor);
+  } else if (pulse) {
+    lp.pulse(note, flashColor);
   } else {
-    if (pulse) {
-      lp.pulse(note, flashColor);
-    } else {
-      lp.flash(note, flashColor);
-    }
+    lp.flash(note, flashColor);
   }
 
   states[note] = !states[note];

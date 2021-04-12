@@ -2,32 +2,38 @@ import midi from 'midi';
 import { CONTROL_NOTE, findDevice, NORMAL_NOTE, onExit } from '../../utils.js';
 import BaseLaunchpad from '../BaseLaunchpad.js';
 
+type LaunchpadMK2Options = {
+  deviceName: RegExp,
+  debug: boolean,
+  xyMode: boolean,
+};
+
 // TODO:
 //  Support for other launchpads
 export default class LaunchpadMK2 extends BaseLaunchpad {
-  #input = new midi.Input();
-  #output = new midi.Output();
-  #options;
+  private readonly input = new midi.Input();
+  private readonly output = new midi.Output();
+  private readonly options: LaunchpadMK2Options;
 
   /**
    *
    * @param {LaunchpadMK2Options?} options
    */
-  constructor(options = {}) {
+  constructor(options?: LaunchpadMK2Options) {
     super();
 
-    this.#options = {
+    this.options = {
       deviceName: /^Launchpad MK2/,
       debug: false,
       xyMode: false,
       ...options
     };
 
-    const deviceName = this.#options.deviceName;
+    const deviceName = this.options.deviceName;
 
     const [inputPort, outputPort] = [
-      findDevice(deviceName, this.#input),
-      findDevice(deviceName, this.#output),
+      findDevice(deviceName, this.input),
+      findDevice(deviceName, this.output),
     ];
 
     if (inputPort === -1 || outputPort === -1) {
@@ -36,31 +42,31 @@ export default class LaunchpadMK2 extends BaseLaunchpad {
 
     onExit(() => this.closePorts());
 
-    this.#input.openPort(inputPort);
-    this.#output.openPort(outputPort);
+    this.input.openPort(inputPort);
+    this.output.openPort(outputPort);
 
     // put the launchpad into session mode
     this.sendSysEx(34, 0);
 
-    this.#setupMessageHandler();
+    this.setupMessageHandler();
 
     process.nextTick(() => {
-      this.emit('ready', this.#input.getPortName(inputPort));
+      this.emit('ready', this.input.getPortName(inputPort));
     });
   }
 
   /**
    * @inheritDoc
    */
-  send(...message) {
-    this.#logDebug('Sending midi message', message);
-    this.#output.sendMessage(Array.isArray(message[0]) ? message[0] : message);
+  send(...message: number[]): void {
+    this.logDebug('Sending midi message', message);
+    this.output.sendMessage(Array.isArray(message[0]) ? message[0] : message);
   }
 
   /**
    * @inheritDoc
    */
-  sendSysEx(...message) {
+  sendSysEx(...message: number[]): void {
     const arrayParsed = Array.isArray(message[0]) ? message[0] : message;
     const sysExMessage = [
       240, 0, 32, 41, 2, 24,
@@ -68,15 +74,15 @@ export default class LaunchpadMK2 extends BaseLaunchpad {
       247
     ];
 
-    this.#logDebug('Sending sysExMessage', sysExMessage);
+    this.logDebug('Sending sysExMessage', sysExMessage);
 
-    this.#output.sendMessage(sysExMessage);
+    this.output.sendMessage(sysExMessage);
   }
 
   /**
    * @inheritDoc
    */
-  setButtonColor(button, color) {
+  setButtonColor(button: number|number[], color: number[]): void {
     if (!Array.isArray(color) || color.some(value => value > 63 || value < 0)) {
       throw new Error('Invalid color settings supplied');
     }
@@ -90,47 +96,49 @@ export default class LaunchpadMK2 extends BaseLaunchpad {
   /**
    * @inheritDoc
    */
-  flash(button, color) {
+  flash(button: number|number[], color: number): void {
     if (color < 0 || color > 127) {
       throw new Error('Color must be in range 0-127');
     }
+    const buttonMapped = this.mapButtonFromXy(button);
 
-    this.sendSysEx(35, 0, button, color);
+    this.sendSysEx(35, 0, buttonMapped, color);
   }
 
   /**
    * @inheritDoc
    */
-  pulse(button, color) {
+  pulse(button: number|number[], color: number): void {
     if (color < 0 || color > 127) {
       throw new Error('Color must be in range 0-127');
     }
+    const buttonMapped = this.mapButtonFromXy(button);
 
-    this.sendSysEx(40, 0, button, color);
+    this.sendSysEx(40, 0, buttonMapped, color);
   }
 
   /**
    * @inheritDoc
    */
-  allOff() {
+  allOff(): void {
     this.sendSysEx(14, 0);
   }
 
   /**
    * @inheritDoc
    */
-  closePorts() {
-    this.#logDebug('Closing ports');
+  closePorts(): void {
+    this.logDebug('Closing ports');
 
     this.allOff();
-    this.#input.closePort();
-    this.#output.closePort();
+    this.input.closePort();
+    this.output.closePort();
   }
 
   /**
    * @inheritDoc
    */
-  eventNames() {
+  eventNames(): string[] {
     return [
       'ready',
       'rawMessage',
@@ -142,8 +150,8 @@ export default class LaunchpadMK2 extends BaseLaunchpad {
   /**
    * @inheritDoc
    */
-  parseButtonToXy(state, note) {
-    if (!this.#options.xyMode) {
+  parseButtonToXy(state: number, note: number): number[]|number {
+    if (!this.options.xyMode) {
       return note;
     }
 
@@ -170,8 +178,10 @@ export default class LaunchpadMK2 extends BaseLaunchpad {
   /**
    * @inheritDoc
    */
-  mapButtonFromXy([x, y]) {
-    if (!this.#options.xyMode) {
+  mapButtonFromXy(xy: number[]|number): number {
+    const [x, y] = Array.isArray(xy) ? xy : [xy, 0];
+
+    if (!this.options.xyMode) {
       return x;
     }
 
@@ -189,14 +199,14 @@ export default class LaunchpadMK2 extends BaseLaunchpad {
     return 91 - (10 * y) + x;
   }
 
-  #setupMessageHandler() {
-    this.#input.on('message', (deltaTime, message) => {
-      this.#logDebug(`m: ${message} d: ${deltaTime}`);
-      this.#internalMessageHandler(message);
+  private setupMessageHandler(): void {
+    this.input.on('message', (deltaTime: number, message: number[]) => {
+      this.logDebug(`m: ${message} d: ${deltaTime}`);
+      this.internalMessageHandler(message);
     });
   }
 
-  #internalMessageHandler(message) {
+  private internalMessageHandler(message: number[]): void {
     this.emit('rawMessage', message);
 
     const [state, note, value] = message;
@@ -206,8 +216,8 @@ export default class LaunchpadMK2 extends BaseLaunchpad {
     this.emit(`button${upDown}`, button, value);
   }
 
-  #logDebug(...message) {
-    if (this.#options.debug) {
+  private logDebug(...message: any[]): void {
+    if (this.options.debug) {
       console.log('[Launchpad Debug]', ...message);
     }
   }

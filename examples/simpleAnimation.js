@@ -1,4 +1,4 @@
-import lpJs from '../src/index.js';
+import lpJs from '../dist/index.js';
 const { colorFromHex, colorFromRGB } = lpJs.colors;
 
 const lp = new lpJs.LaunchpadMK2();

@@ -1,5 +1,4 @@
 import EventEmitter from 'eventemitter3';
-import { CONTROL_NOTE, NORMAL_NOTE } from '../utils.js';
 
 /**
  * base class for interacting with a launchpad<br>
@@ -17,7 +16,7 @@ import { CONTROL_NOTE, NORMAL_NOTE } from '../utils.js';
  */
 // cuz this is an abstract class
 /* eslint-disable no-unused-vars */
-export default class BaseLaunchpad extends EventEmitter {
+export default abstract class BaseLaunchpad extends EventEmitter {
 
   /**
    * Send a midi message to the launchpad
@@ -25,9 +24,7 @@ export default class BaseLaunchpad extends EventEmitter {
    *
    * @abstract
    */
-  send(...message) {
-    BaseLaunchpad.#abstract('send');
-  }
+  abstract send(...message: number[]): void;
 
   /**
    * Send a System Exclusive message to the launchpad.
@@ -37,9 +34,7 @@ export default class BaseLaunchpad extends EventEmitter {
    *
    * @abstract
    */
-  sendSysEx(...message) {
-    BaseLaunchpad.#abstract('sendSysEx');
-  }
+  abstract sendSysEx(...message: number[]): void;
 
   /**
    * Sets the color for a button on the Launchpad <br>
@@ -50,9 +45,7 @@ export default class BaseLaunchpad extends EventEmitter {
    *
    * @abstract
    */
-  setButtonColor(button, color) {
-    BaseLaunchpad.#abstract('setButtonColor');
-  }
+  abstract setButtonColor(button: number|number[], color: number[]): void;
 
   /**
    * Tells the launchpad to start flashing a button between the current color and {@param color}<br>
@@ -66,9 +59,7 @@ export default class BaseLaunchpad extends EventEmitter {
    *
    * @abstract
    */
-  flash(button, color) {
-    BaseLaunchpad.#abstract('flash');
-  }
+  abstract flash(button: number|number[], color: number): void;
 
   /**
    * Tells the launchpad to start pulsing a button between the current color and {@param color}<br>
@@ -82,27 +73,21 @@ export default class BaseLaunchpad extends EventEmitter {
    *
    * @abstract
    */
-  pulse(button, color) {
-    BaseLaunchpad.#abstract('pulse');
-  }
+  abstract pulse(button: number|number[], color: number): void;
 
   /**
    * Turns all the lights on the launchpad off
    *
    * @abstract
    */
-  allOff() {
-    BaseLaunchpad.#abstract('allOff');
-  }
+  abstract allOff(): void;
 
   /**
    * Closes the connection with the launchpad
    *
    * @abstract
    */
-  closePorts() {
-    BaseLaunchpad.#abstract('closePorts');
-  }
+  abstract closePorts(): void;
 
   /**
    * Parses a button to an [x, y] coordinate
@@ -112,9 +97,7 @@ export default class BaseLaunchpad extends EventEmitter {
    *
    * @return {number[]|number} Only returns the array if xyMode is enabled
    */
-  parseButtonToXy(state, note) {
-    BaseLaunchpad.#abstract('parseButtonToXy');
-  }
+  abstract parseButtonToXy(state: number, note: number): number[]|number;
 
   /**
    * Gets the correct button on a launchpad given an [x, y] coordinate<br>
@@ -126,11 +109,5 @@ export default class BaseLaunchpad extends EventEmitter {
    *
    * @returns {number} The button on the launchpad for this coordinate
    */
-  mapButtonFromXy([x, y]) {
-    BaseLaunchpad.#abstract('mapButtonFromXy');
-  }
-
-  static #abstract(method) {
-    throw new Error(`The method ${method} is not implemented in this class.`);
-  }
+  abstract mapButtonFromXy([x, y]: [number, number]): number;
 }

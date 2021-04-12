@@ -1,7 +1,8 @@
 import * as EventEmitter from "eventemitter3";
+import * as midi from "midi";
 
 declare module  'launchpad.js' {
-  export interface BaseLaunchpad extends EventEmitter {
+  export class BaseLaunchpad extends EventEmitter {
     send(...message: number[]): void;
     sendSysEx(...message: number[]): void;
     setButtonColor(button: number, color: number[]): void;
@@ -18,7 +19,7 @@ declare module  'launchpad.js' {
     xyMode: boolean,
   };
 
-  export interface LaunchpadMK2 extends BaseLaunchpad {
+  export class LaunchpadMK2 extends BaseLaunchpad {
     constructor(options: LaunchpadMK2Options);
   }
 
@@ -28,5 +29,5 @@ declare module  'launchpad.js' {
 
   // utils.js
   export function onExit(fn: () => void);
-  export function findDevice(regex: RegExp, midi: any): void; // TODO: midi type
+  export function findDevice(regex: RegExp, midi: midi.Input): void;
 }

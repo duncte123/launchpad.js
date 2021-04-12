@@ -1,7 +1,9 @@
+import midi from 'midi';
+
 export const NORMAL_NOTE = 144;
 export const CONTROL_NOTE = 176;
 
-export function onExit(fn) {
+export function onExit(fn: () => void): void {
   let manualExit = false;
   const doExit = makeExitHandler(true);
 
@@ -19,8 +21,8 @@ export function onExit(fn) {
     process.kill(process.pid, 'SIGUSR2');
   });
 
-  function makeExitHandler(exit) {
-    return () => {
+  function makeExitHandler(exit: boolean = false) {
+    return (): void => {
       if (!manualExit) {
         process.stdout.write('\n');
         fn();
@@ -34,9 +36,9 @@ export function onExit(fn) {
   }
 }
 
-export function findDevice(regex, midi) {
-  for (let i = 0; i < midi.getPortCount(); i++) {
-    const name = midi.getPortName(i);
+export function findDevice(regex: RegExp, midiInput: midi.Input): number {
+  for (let i = 0; i < midiInput.getPortCount(); i++) {
+    const name = midiInput.getPortName(i);
 
     if (regex.test(name)) {
       return i;

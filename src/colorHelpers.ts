@@ -8,7 +8,7 @@ export const defaultColors = {
   orange: [63, 17, 0],
 };
 
-function scaleBetween(unscaledNum, minAllowed, maxAllowed, min, max) {
+function scaleBetween(unscaledNum: number, minAllowed: number, maxAllowed: number, min: number, max: number): number {
   return (maxAllowed - minAllowed) * (unscaledNum - min) / (max - min) + minAllowed;
 }
 
@@ -18,8 +18,8 @@ function scaleBetween(unscaledNum, minAllowed, maxAllowed, min, max) {
  * @param {number[]} rgb the rgb value to convert
  * @returns {number[]} a color array that the launchpad can accept
  */
-export function colorFromRGB(rgb) {
-  return rgb.map(v => scaleBetween(v, 0, 63, 0, 255));
+export function colorFromRGB(rgb: number[]): number[] {
+  return rgb.map((v: number) => scaleBetween(v, 0, 63, 0, 255));
 }
 
 /**
@@ -28,10 +28,10 @@ export function colorFromRGB(rgb) {
  * @param {string} hex the color
  * @returns {number[]} a color array that the launchpad can accept
  */
-export function colorFromHex(hex) {
+export function colorFromHex(hex: string): number[] {
   // Yes I used a package here, deal with it
   // This is for future proofing
   return convert.hex.rgb(hex)
     // scale the colors to fit between, 0-63
-    .map(v => scaleBetween(v, 0, 63, 0, 255));
+    .map((v: number) => scaleBetween(v, 0, 63, 0, 255));
 }

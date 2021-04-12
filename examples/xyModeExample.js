@@ -1,4 +1,4 @@
-import lpJs from '../src/index.js';
+import lpJs from '../dist/index.js';
 const { defaultColors } = lpJs.colors;
 
 // upon connect the launchpad will be put into "Session" mode
