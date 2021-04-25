@@ -1,8 +1,8 @@
-import lpJs from '../dist/index.js';
-const { colorFromHex, defaultColors } = lpJs.colors;
+import { LaunchpadMK2, colors } from '../dist/index.js';
+const { colorFromHex, defaultColors } = colors;
 
 // upon connect the launchpad will be put into "Session" mode
-const lp = new lpJs.LaunchpadMK2({
+const lp = new LaunchpadMK2({
   debug: false,
 });
 

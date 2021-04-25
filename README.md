@@ -20,8 +20,8 @@ If a launchpad is not listed here it means that I do not own one and have not be
 ### Examples
 More examples can be found in the [examples folder](./examples), this is just a simple button listener.
 ```js
-const lpJs = require('launchpad.js');
-const { colorFromHex, defaultColors } = lpJs.colors;
+const { LaunchpadMK2, colors } = require('launchpad.js');
+const { colorFromHex, defaultColors } = colors;
 
 // we are enabling xyMode here
 const lp = new lpJs.LaunchpadMK2({ xyMode: true });

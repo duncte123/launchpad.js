@@ -1,8 +1,7 @@
-import lpJs from '../dist/index.js';
+import { LaunchpadMK2, colors } from '../dist/index.js';
+const { colorFromHex } = colors;
 
-const { colorFromHex } = lpJs.colors;
-
-const lp = new lpJs.LaunchpadMK2();
+const lp = new LaunchpadMK2();
 
 // just a basic color setup
 const noteColors = {

@@ -1,7 +1,7 @@
-import lpJs from '../dist/index.js';
-const { colorFromHex, colorFromRGB } = lpJs.colors;
+import { LaunchpadMK2, colors } from '../dist/index.js';
+const { colorFromHex, colorFromRGB } = colors;
 
-const lp = new lpJs.LaunchpadMK2();
+const lp = new LaunchpadMK2();
 
 let currentFrame = 0;
 // this was coded by hand, yeah I know
