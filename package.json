@@ -6,6 +6,7 @@
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "scripts": {
+    "prepublish": "npm run build && npm run ts:defs",
     "build": "tsc -b",
     "ts:defs": "tsc --declaration --outDir types --emitDeclarationOnly",
     "lint": "eslint src/* --ext .js,.jsx,.ts,.tsx",

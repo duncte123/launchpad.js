@@ -1,35 +1,11 @@
-import * as EventEmitter from 'eventemitter3';
-import * as midi from 'midi';
-
-declare module 'launchpad.js' {
-  export class BaseLaunchpad extends EventEmitter {
-    send(...message: number[]): void;
-    sendSysEx(...message: number[]): void;
-    setButtonColor(button: number, color: number[]): void;
-    flash(button: number, color: number): void;
-    pulse(button: number, color: number): void;
-
-    allOff(): void;
-    closePorts(): void;
-  }
-
-  export type LaunchpadMK2Options = {
-    deviceName: RegExp,
-    debug: boolean,
-    xyMode: boolean,
-  };
-
-  export class LaunchpadMK2 extends BaseLaunchpad {
-    constructor(options: LaunchpadMK2Options);
-  }
-
-  // colorHelper.js
-  export function colorFromRGB(rgb: number[]): number[];
-  export function colorFromHex(hex: string): number[];
-  export function minMaxColor(color: number): number;
-  export function scaleBetween(unscaledNum: number, minAllowed: number, maxAllowed: number, min: number, max: number): number;
-
-  // utils.js
-  export function onExit(fn: () => void);
-  export function findDevice(regex: RegExp, midiInput: midi.Input): void;
-}
+import LaunchpadMK2 from './launchpads/MK2/LaunchpadMK2.js';
+import BaseLaunchpad from './launchpads/BaseLaunchpad.js';
+import * as colors from './colorHelpers.js';
+import * as utils from './utils.js';
+declare const _default: {
+    BaseLaunchpad: typeof BaseLaunchpad;
+    LaunchpadMK2: typeof LaunchpadMK2;
+    colors: typeof colors;
+    utils: typeof utils;
+};
+export default _default;
