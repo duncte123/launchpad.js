@@ -28,6 +28,10 @@
     "url": "https://github.com/duncte123/launchpad.js/issues"
   },
   "homepage": "https://github.com/duncte123/launchpad.js#readme",
+  "files": [
+    "dist/",
+    "types/"
+  ],
   "dependencies": {
     "color-convert": "^2.0.1",
     "eventemitter3": "^4.0.7",

@@ -1,6 +1,7 @@
 import midi from 'midi';
 import { CONTROL_NOTE, findDevice, NORMAL_NOTE, onExit } from '../../utils.js';
 import BaseLaunchpad from '../BaseLaunchpad.js';
+import { scaleBetween, minMaxColor } from '../../colorHelpers.js';
 
 type LaunchpadMK2Options = {
   deviceName: RegExp,
@@ -83,11 +84,12 @@ export default class LaunchpadMK2 extends BaseLaunchpad {
    * @inheritDoc
    */
   setButtonColor(button: number|number[], color: number[]): void {
-    if (!Array.isArray(color) || color.some(value => value > 63 || value < 0)) {
+    if (!Array.isArray(color) || color.length !== 3) {
       throw new Error('Invalid color settings supplied');
     }
 
-    const [r, g, b] = color;
+    // scale the color so the launchpad understands it
+    const [r, g, b] = color.map((v: number) => scaleBetween(v, 0, 63, 0, 255));
     const buttonMapped = this.mapButtonFromXy(button);
 
     this.sendSysEx(11, buttonMapped, r, g, b);
@@ -97,24 +99,18 @@ export default class LaunchpadMK2 extends BaseLaunchpad {
    * @inheritDoc
    */
   flash(button: number|number[], color: number): void {
-    if (color < 0 || color > 127) {
-      throw new Error('Color must be in range 0-127');
-    }
     const buttonMapped = this.mapButtonFromXy(button);
 
-    this.sendSysEx(35, 0, buttonMapped, color);
+    this.sendSysEx(35, 0, buttonMapped, minMaxColor(color));
   }
 
   /**
    * @inheritDoc
    */
   pulse(button: number|number[], color: number): void {
-    if (color < 0 || color > 127) {
-      throw new Error('Color must be in range 0-127');
-    }
     const buttonMapped = this.mapButtonFromXy(button);
 
-    this.sendSysEx(40, 0, buttonMapped, color);
+    this.sendSysEx(40, 0, buttonMapped, minMaxColor(color));
   }
 
   /**

@@ -48,7 +48,6 @@ lp.once('ready', (deviceName) => {
 ```
 
 ## TODO:
-- Add grid system (no longer those weird numbers)
 - Add support for the same launchpads as launchpad.py
 
 ### Links

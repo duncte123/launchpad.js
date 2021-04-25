@@ -8,7 +8,11 @@ export const defaultColors = {
   orange: [63, 17, 0],
 };
 
-function scaleBetween(unscaledNum: number, minAllowed: number, maxAllowed: number, min: number, max: number): number {
+export function minMaxColor(color: number): number {
+  return Math.max(Math.min(color, 127), 0);
+}
+
+export function scaleBetween(unscaledNum: number, minAllowed: number, maxAllowed: number, min: number, max: number): number {
   return (maxAllowed - minAllowed) * (unscaledNum - min) / (max - min) + minAllowed;
 }
 

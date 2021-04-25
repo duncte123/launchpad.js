@@ -1,7 +1,7 @@
-import * as EventEmitter from "eventemitter3";
-import * as midi from "midi";
+import * as EventEmitter from 'eventemitter3';
+import * as midi from 'midi';
 
-declare module  'launchpad.js' {
+declare module 'launchpad.js' {
   export class BaseLaunchpad extends EventEmitter {
     send(...message: number[]): void;
     sendSysEx(...message: number[]): void;
@@ -23,11 +23,13 @@ declare module  'launchpad.js' {
     constructor(options: LaunchpadMK2Options);
   }
 
-  //colorHelper.js
+  // colorHelper.js
   export function colorFromRGB(rgb: number[]): number[];
   export function colorFromHex(hex: string): number[];
+  export function minMaxColor(color: number): number;
+  export function scaleBetween(unscaledNum: number, minAllowed: number, maxAllowed: number, min: number, max: number): number;
 
   // utils.js
   export function onExit(fn: () => void);
-  export function findDevice(regex: RegExp, midi: midi.Input): void;
+  export function findDevice(regex: RegExp, midiInput: midi.Input): void;
 }

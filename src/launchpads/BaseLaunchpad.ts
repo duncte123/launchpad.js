@@ -41,7 +41,7 @@ export default abstract class BaseLaunchpad extends EventEmitter {
    * The button is an array of x and y when xyMode is turned on
    *
    * @param {number|number[]} button The grid button to set the color for
-   * @param {Array<number>} color the color to set for the button
+   * @param {Array<number>} color the color to set for the button, the array is an RGB array
    *
    * @abstract
    */
