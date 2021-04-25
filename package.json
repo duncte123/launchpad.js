@@ -4,9 +4,9 @@
   "version": "2.0.4",
   "description": "A javascript api to control your Novation launchpads",
   "main": "dist/index.js",
-  "types": "types/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "prepublish": "npm run build && npm run ts:defs",
+    "prepublish": "tsc",
     "build": "tsc -b",
     "ts:defs": "tsc --declaration --outDir types --emitDeclarationOnly",
     "lint": "eslint src/* --ext .js,.jsx,.ts,.tsx",
@@ -30,8 +30,7 @@
   },
   "homepage": "https://github.com/duncte123/launchpad.js#readme",
   "files": [
-    "dist/",
-    "types/"
+    "dist/"
   ],
   "dependencies": {
     "color-convert": "^2.0.1",

@@ -3,7 +3,7 @@ import { CONTROL_NOTE, findDevice, NORMAL_NOTE, onExit } from '../../utils.js';
 import BaseLaunchpad from '../BaseLaunchpad.js';
 import { scaleBetween, minMaxColor } from '../../colorHelpers.js';
 
-type LaunchpadMK2Options = {
+export type LaunchpadMK2Options = {
   deviceName: RegExp,
   debug: boolean,
   xyMode: boolean,
@@ -11,7 +11,7 @@ type LaunchpadMK2Options = {
 
 // TODO:
 //  Support for other launchpads
-export default class LaunchpadMK2 extends BaseLaunchpad {
+export class LaunchpadMK2 extends BaseLaunchpad {
   private readonly input = new midi.Input();
   private readonly output = new midi.Output();
   private readonly options: LaunchpadMK2Options;
