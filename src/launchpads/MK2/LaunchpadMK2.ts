@@ -88,8 +88,12 @@ export class LaunchpadMK2 extends BaseLaunchpad {
       throw new Error('Invalid color settings supplied');
     }
 
-    // scale the color so the launchpad understands it
-    const [r, g, b] = color.map((v: number) => scaleBetween(v, 0, 63, 0, 255));
+    // make sure the launchpad understands the colors we provide
+    if (color.some(value => value > 63 || value < 0)) {
+      throw new Error('RGB color is invalid, please make sure the color values are in range 0-63 (Hint: you can use colors.colorFromRGB as a helper for that');
+    }
+
+    const [r, g, b] = color;
     const buttonMapped = this.mapButtonFromXy(button);
 
     this.sendSysEx(11, buttonMapped, r, g, b);

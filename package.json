@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "prepublish": "tsc",
+    "prepublishOnly": "tsc",
     "build": "tsc -b",
     "ts:defs": "tsc --declaration --outDir types --emitDeclarationOnly",
     "lint": "eslint src/* --ext .js,.jsx,.ts,.tsx",
