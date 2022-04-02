@@ -41,7 +41,7 @@ export function findDevice(regex: RegExp, midiInput: midi.Input): number {
   const index = ports.findIndex(p => p.match(regex));
 
   if (index === -1) {
-    throw new Error(`No MIDI devices matches '${regex}'. Found: ${ports.join(', ') || '(none)'}`);
+    throw new Error(`No MIDI device matches '${regex}'. Found: ${ports.join(', ') || '(none)'}`);
   }
 
   return index;
