@@ -158,24 +158,10 @@ export class LaunchpadMK3 extends BaseLaunchpad {
       return note;
     }
 
-    // The top row is selected
-    if (state === CONTROL_NOTE && note >= 104) {
-      return [
-        note - 104, // x
-        0, // y
-      ];
-    }
+    const row = Math.floor(note / 10);
+    const col = (note - 1) % 10;
 
-    if (state === NORMAL_NOTE) {
-      return [
-        // % 10 is because we want to have one more than the buttons in one row
-        // that way we get a number from 1 - 9
-        (note - 1) % 10, // x
-        Math.floor((99 - note) / 10), // y
-      ];
-    }
-
-    return [];
+    return [col, 9 - row];
   }
 
   /**
@@ -188,18 +174,7 @@ export class LaunchpadMK3 extends BaseLaunchpad {
       return x;
     }
 
-    // top row
-    if (y === 0) {
-      // top row is 104 - 111
-      // making x = 0 == 104
-      return x + 104;
-    }
-
-    // the lowest button is 11 meaning we need to multiply y by 10
-    // we start at 91 because we are always subtracting at least 10
-    // we add x to get the correct column
-    // eslint-disable-next-line no-extra-parens
-    return 91 - (10 * y) + x;
+    return (9 - y) * 10 + x + 1;
   }
 
   private setupMessageHandler(): void {
