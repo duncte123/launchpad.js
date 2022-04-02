@@ -1,83 +1,31 @@
-import midi from 'midi';
-import { CONTROL_NOTE, findDevice, NORMAL_NOTE, onExit } from '../../utils.js';
-import BaseLaunchpad from '../BaseLaunchpad.js';
-import { scaleBetween, minMaxColor } from '../../colorHelpers.js';
+import { CONTROL_NOTE, NORMAL_NOTE } from '../../utils.js';
+import { BaseLaunchpadOptions } from '../base/BaseLaunchpad.js';
+import { minMaxColor } from '../../colorHelpers.js';
+import { CommonLaunchpad } from '../base/CommonLaunchpad.js';
 
-export type LaunchpadMK2Options = {
-  deviceName: RegExp,
-  debug: boolean,
-  xyMode: boolean,
-};
+export type LaunchpadMK2Options = BaseLaunchpadOptions;
 
-// TODO:
-//  Support for other launchpads
-export class LaunchpadMK2 extends BaseLaunchpad {
-  private readonly input = new midi.Input();
-  private readonly output = new midi.Output();
-  private readonly options: LaunchpadMK2Options;
+export class LaunchpadMK2 extends CommonLaunchpad {
 
   /**
-   *
    * @param {LaunchpadMK2Options?} options
    */
   constructor(options?: LaunchpadMK2Options) {
-    super();
+    super(options);
 
-    this.options = {
-      deviceName: /^Launchpad MK2/,
-      debug: false,
-      xyMode: false,
-      ...options
-    };
-
-    const deviceName = this.options.deviceName;
-
-    const [inputPort, outputPort] = [
-      findDevice(deviceName, this.input),
-      findDevice(deviceName, this.output),
-    ];
-
-    if (inputPort === -1 || outputPort === -1) {
-      throw new Error(`Could not find connected launchpad for name "${deviceName}"`);
-    }
-
-    onExit(() => this.closePorts());
-
-    this.input.openPort(inputPort);
-    this.output.openPort(outputPort);
+    this.openMidiDevice(this.options.deviceName ?? /^Launchpad MK2/);
 
     // put the launchpad into session mode
     this.sendSysEx(34, 0);
 
     this.setupMessageHandler();
-
-    process.nextTick(() => {
-      this.emit('ready', this.input.getPortName(inputPort));
-    });
   }
 
   /**
    * @inheritDoc
    */
-  send(...message: number[]): void {
-    this.logDebug('Sending midi message', message);
-    this.output.sendMessage(Array.isArray(message[0]) ? message[0] : message);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  sendSysEx(...message: number[]): void {
-    const arrayParsed = Array.isArray(message[0]) ? message[0] : message;
-    const sysExMessage = [
-      240, 0, 32, 41, 2, 24,
-      ...arrayParsed,
-      247
-    ];
-
-    this.logDebug('Sending sysExMessage', sysExMessage);
-
-    this.output.sendMessage(sysExMessage);
+  protected makeSysEx(payload: number[]): number[] {
+    return [240, 0, 32, 41, 2, 24, ...payload, 247];
   }
 
   /**
@@ -122,29 +70,6 @@ export class LaunchpadMK2 extends BaseLaunchpad {
    */
   allOff(): void {
     this.sendSysEx(14, 0);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  closePorts(): void {
-    this.logDebug('Closing ports');
-
-    this.allOff();
-    this.input.closePort();
-    this.output.closePort();
-  }
-
-  /**
-   * @inheritDoc
-   */
-  eventNames(): string[] {
-    return [
-      'ready',
-      'rawMessage',
-      'buttonDown',
-      'buttonUp',
-    ];
   }
 
   /**
@@ -197,28 +122,5 @@ export class LaunchpadMK2 extends BaseLaunchpad {
     // we add x to get the correct column
     // eslint-disable-next-line no-extra-parens
     return 91 - (10 * y) + x;
-  }
-
-  private setupMessageHandler(): void {
-    this.input.on('message', (deltaTime: number, message: number[]) => {
-      this.logDebug(`m: ${message} d: ${deltaTime}`);
-      this.internalMessageHandler(message);
-    });
-  }
-
-  private internalMessageHandler(message: number[]): void {
-    this.emit('rawMessage', message);
-
-    const [state, note, value] = message;
-    const button = this.parseButtonToXy(state, note);
-
-    const upDown = Boolean(value) ? 'Down' : 'Up';
-    this.emit(`button${upDown}`, button, value);
-  }
-
-  private logDebug(...message: any[]): void {
-    if (this.options.debug) {
-      console.log('[Launchpad Debug]', ...message);
-    }
   }
 }

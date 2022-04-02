@@ -37,14 +37,24 @@ export function onExit(fn: () => void): void {
 }
 
 export function findDevice(regex: RegExp, midiInput: midi.Input): number {
-  for (let i = 0; i < midiInput.getPortCount(); i++) {
-    const name = midiInput.getPortName(i);
+  const ports = range(midiInput.getPortCount()).map(i => midiInput.getPortName(i));
+  const index = ports.findIndex(p => p.match(regex));
 
-    if (regex.test(name)) {
-      return i;
-    }
+  if (index === -1) {
+    throw new Error(`No MIDI devices matches '${regex}'. Found: ${ports.join(', ') || '(none)'}`);
   }
 
-  // return -1 if no ports are found
-  return -1;
+  return index;
+}
+
+
+/**
+ * Return the numbers [0..n-1]
+ */
+export function range(n: number): number[] {
+  const ret = [];
+  for (let i = 0; i < n; i++) {
+    ret.push(i);
+  }
+  return ret;
 }

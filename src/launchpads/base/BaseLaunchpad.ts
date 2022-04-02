@@ -1,5 +1,35 @@
 import EventEmitter from 'eventemitter3';
 
+export interface BaseLaunchpadOptions {
+
+  /**
+   * Regexp to use to find the Launchpad MIDI device
+   *
+   * By default, will use a regexp that is appropriate
+   * for the Launchpad version you selected.
+   */
+  readonly deviceName?: RegExp;
+
+  /**
+   * Switch on debug mode
+   *
+   * Will log more messages to the console.
+   *
+   * @default false
+   */
+  readonly debug?: boolean;
+
+  /**
+   * Switch on X/Y mode
+   *
+   * In X/Y mode, buttons are represented as [x, y]
+   * arrays (instead of raw button numbers).
+   *
+   * @default false
+   */
+  readonly xyMode?: boolean;
+}
+
 /**
  * base class for interacting with a launchpad<br>
  *   each sub class must close the port to the launchpad when the application is exited<br>
