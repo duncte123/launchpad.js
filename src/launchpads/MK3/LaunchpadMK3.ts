@@ -1,7 +1,6 @@
 import midi from 'midi';
-import { CONTROL_NOTE, findDevice, NORMAL_NOTE, onExit } from '../../utils.js';
+import { findDevice, onExit } from '../../utils.js';
 import BaseLaunchpad from '../BaseLaunchpad.js';
-import { scaleBetween, minMaxColor } from '../../colorHelpers.js';
 
 export type LaunchpadMK3Options = {
   deviceName: RegExp,
