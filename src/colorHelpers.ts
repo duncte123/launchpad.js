@@ -22,8 +22,8 @@ export function scaleBetween(unscaledNum: number, minAllowed: number, maxAllowed
  * @param {number[]} rgb the rgb value to convert
  * @returns {number[]} a color array that the launchpad can accept
  */
-export function colorFromRGB(rgb: number[]): number[] {
-  return rgb.map((v: number) => scaleBetween(v, 0, 63, 0, 255));
+export function colorFromRGB(rgb: [number, number, number]): [number, number, number] {
+  return rgb.map((v: number) => scaleBetween(v, 0, 63, 0, 255)) as [number, number, number];
 }
 
 /**
@@ -32,10 +32,10 @@ export function colorFromRGB(rgb: number[]): number[] {
  * @param {string} hex the color
  * @returns {number[]} a color array that the launchpad can accept
  */
-export function colorFromHex(hex: string): number[] {
+export function colorFromHex(hex: string): [number, number, number] {
   // Yes I used a package here, deal with it
   // This is for future proofing
   return convert.hex.rgb(hex)
     // scale the colors to fit between, 0-63
-    .map((v: number) => scaleBetween(v, 0, 63, 0, 255));
+    .map((v: number) => scaleBetween(v, 0, 63, 0, 255)) as [number, number, number];
 }
