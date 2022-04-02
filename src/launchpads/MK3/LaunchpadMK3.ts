@@ -45,8 +45,6 @@ export class LaunchpadMK3 extends BaseLaunchpad {
     this.output.openPort(outputPort);
     this.input.openPort(inputPort);
 
-    this.input.ignoreTypes(false, false, false);
-
     this.setupMessageHandler();
 
     // Switch to programmer mode mode (full control of all buttons)
