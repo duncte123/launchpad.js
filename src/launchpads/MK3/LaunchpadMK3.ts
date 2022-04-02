@@ -49,6 +49,7 @@ export class LaunchpadMK3 extends BaseLaunchpad {
 
     // Switch to programmer mode mode (full control of all buttons)
     this.sendSysEx(...SysEx.setProgrammerMode(true));
+    this.sendSysEx(...SysEx.setBrightness(1));
 
     process.nextTick(() => {
       this.emit('ready', this.input.getPortName(inputPort));
@@ -226,6 +227,13 @@ export class ButtonColor {
 class SysEx {
   public static setProgrammerMode(enable: boolean): number[] {
     return [14, enable ? 1 : 0];
+  }
+
+  /**
+   * Set brightness between 0..1
+   */
+  public static setBrightness(level: number): number[] {
+    return [8, Math.round(level * 127)];
   }
 
   public static setButtonColors(...buttons: number[][]): number[] {
