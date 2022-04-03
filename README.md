@@ -12,6 +12,7 @@ Some sample programs can be found in the [examples folder](./examples).
 
 ### Launchpad models currently supported
 - Launchpad MK2
+- Launchpad MK3 (only tested with Mini)
 
 ##### Why are only these launchpads supported?
 These launchpads are supported because I own them myself and have been able to test them.
