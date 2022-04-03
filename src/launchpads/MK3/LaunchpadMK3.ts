@@ -1,13 +1,13 @@
-import midi from 'midi';
-import { findDevice, onExit } from '../../utils.js';
-import BaseLaunchpad, { BaseLaunchpadOptions } from '../base/BaseLaunchpad.js';
-import { CommonLaunchpad } from '../base/CommonLaunchpad.js';
-import { ButtonColor } from './ButtonColor.js';
+import { BaseLaunchpadOptions } from '../base/BaseLaunchpad';
+import { CommonLaunchpad } from '../base/CommonLaunchpad';
+import { ButtonColor } from './ButtonColor';
+import { SysEx } from './SysEx';
 
 export type LaunchpadMK3Options = BaseLaunchpadOptions;
 
 export class LaunchpadMK3 extends CommonLaunchpad {
   public static readonly DEFAULT_DEVICE_NAME = /^Launchpad.*MK3 MIDI/;
+
   /**
    *
    * @param {LaunchpadMK3Options?} options

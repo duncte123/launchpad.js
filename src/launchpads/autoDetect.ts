@@ -38,7 +38,7 @@ export function autoDetect(options?: AutoDetectOptions): BaseLaunchpad {
     return new LaunchpadMK3(options);
   }
 
-  throw new Error(`Did not find supported Launchpads among MIDI devices: ${inputNames.join(', ') ?? '(none)'}`);
+  throw new Error(`Did not find supported Launchpads among MIDI devices: ${inputNames.join(', ') || '(none)'}`);
 
   function canFindBoth(regex: RegExp): boolean {
     return inputNames.some(n => n.match(regex)) && outputNames.some(n => n.match(regex));
