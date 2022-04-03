@@ -82,14 +82,18 @@ export default abstract class BaseLaunchpad extends EventEmitter {
    *   <b>IMPORTANT:</b> flashing and pulsing only works for buttons that are on the grid <br>
    * The button is an array of x and y when xyMode is turned on
    *
+   * Not all Launchpads support a second color. For those, the
+   * second color is ignored.
+   *
    * @param {number|number[]} button The grid button to start flashing
    * @param {number} color A color from the primary color chart, result to your launchpad's programming manual for more info
+   * @param {number} color2 A color from the primary color chart, result to your launchpad's programming manual for more info.
    *
    * @throws {Error} if the color is out of the launchpad's range
    *
    * @abstract
    */
-  abstract flash(button: number|number[], color: number): void;
+  abstract flash(button: number|number[], color: number, color2?: number): void;
 
   /**
    * Tells the launchpad to start pulsing a button between the current color and {@param color}<br>

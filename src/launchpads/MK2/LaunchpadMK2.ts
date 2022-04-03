@@ -6,6 +6,7 @@ import { CommonLaunchpad } from '../base/CommonLaunchpad.js';
 export type LaunchpadMK2Options = BaseLaunchpadOptions;
 
 export class LaunchpadMK2 extends CommonLaunchpad {
+  public static readonly DEFAULT_DEVICE_NAME = /^Launchpad MK2/;
 
   /**
    * @param {LaunchpadMK2Options?} options
@@ -13,7 +14,7 @@ export class LaunchpadMK2 extends CommonLaunchpad {
   constructor(options?: LaunchpadMK2Options) {
     super(options);
 
-    this.openMidiDevice(this.options.deviceName ?? /^Launchpad MK2/);
+    this.openMidiDevice(this.options.deviceName ?? LaunchpadMK2.DEFAULT_DEVICE_NAME);
 
     // put the launchpad into session mode
     this.sendSysEx(34, 0);

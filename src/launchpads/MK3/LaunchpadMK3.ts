@@ -7,6 +7,7 @@ import { ButtonColor } from './ButtonColor.js';
 export type LaunchpadMK3Options = BaseLaunchpadOptions;
 
 export class LaunchpadMK3 extends CommonLaunchpad {
+  public static readonly DEFAULT_DEVICE_NAME = /^Launchpad.*MK3 MIDI/;
   /**
    *
    * @param {LaunchpadMK3Options?} options
@@ -16,7 +17,7 @@ export class LaunchpadMK3 extends CommonLaunchpad {
 
     // The LP advertises both MIDI and DAW interfaces, but only
     // the MIDI interface reports button presses.
-    this.openMidiDevice(options?.deviceName ?? /^Launchpad.*MK3 MIDI/);
+    this.openMidiDevice(options?.deviceName ?? LaunchpadMK3.DEFAULT_DEVICE_NAME);
 
     this.setupMessageHandler();
 
