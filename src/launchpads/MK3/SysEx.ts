@@ -1,7 +1,7 @@
 /**
  * Class to format SysEx messages into an array of numbers
  */
-class SysEx {
+export class SysEx {
   public static setProgrammerMode(enable: boolean): number[] {
     return [14, enable ? 1 : 0];
   }

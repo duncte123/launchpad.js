@@ -1,7 +1,8 @@
-import { CONTROL_NOTE, NORMAL_NOTE } from '../../utils.js';
-import { BaseLaunchpadOptions } from '../base/BaseLaunchpad.js';
-import { minMaxColor } from '../../colorHelpers.js';
-import { CommonLaunchpad } from '../base/CommonLaunchpad.js';
+import { CONTROL_NOTE, NORMAL_NOTE } from '../../utils';
+import { BaseLaunchpadOptions } from '../base/BaseLaunchpad';
+import { minMaxColor } from '../../colorHelpers';
+import { CommonLaunchpad } from '../base/CommonLaunchpad';
+import { Button, ButtonIn, isButton } from '../base/types';
 
 export type LaunchpadMK2Options = BaseLaunchpadOptions;
 
@@ -32,7 +33,7 @@ export class LaunchpadMK2 extends CommonLaunchpad {
   /**
    * @inheritDoc
    */
-  setButtonColor(button: number|number[], color: number[]): void {
+  setButtonColor(button: ButtonIn, color: number[]): void {
     if (!Array.isArray(color) || color.length !== 3) {
       throw new Error('Invalid color settings supplied');
     }
@@ -51,7 +52,7 @@ export class LaunchpadMK2 extends CommonLaunchpad {
   /**
    * @inheritDoc
    */
-  flash(button: number|number[], color: number): void {
+  flash(button: ButtonIn, color: number): void {
     const buttonMapped = this.mapButtonFromXy(button);
 
     this.sendSysEx(35, 0, buttonMapped, minMaxColor(color));
@@ -60,7 +61,7 @@ export class LaunchpadMK2 extends CommonLaunchpad {
   /**
    * @inheritDoc
    */
-  pulse(button: number|number[], color: number): void {
+  pulse(button: ButtonIn, color: number): void {
     const buttonMapped = this.mapButtonFromXy(button);
 
     this.sendSysEx(40, 0, buttonMapped, minMaxColor(color));
@@ -76,21 +77,19 @@ export class LaunchpadMK2 extends CommonLaunchpad {
   /**
    * @inheritDoc
    */
-  parseButtonToXy(state: number, note: number): number[]|number {
-    if (!this.options.xyMode) {
-      return note;
-    }
-
+  parseButtonToXy(state: number, note: number): Button {
     // The top row is selected
+    let xy: [number, number] = [-1, -1];
+
     if (state === CONTROL_NOTE && note >= 104) {
-      return [
+      xy = [
         note - 104, // x
         0, // y
       ];
     }
 
     if (state === NORMAL_NOTE) {
-      return [
+      xy = [
         // % 10 is because we want to have one more than the buttons in one row
         // that way we get a number from 1 - 9
         (note - 1) % 10, // x
@@ -98,18 +97,22 @@ export class LaunchpadMK2 extends CommonLaunchpad {
       ];
     }
 
-    return [];
+    return { nr: note, xy };
   }
 
   /**
    * @inheritDoc
    */
-  mapButtonFromXy(xy: number[]|number): number {
-    const [x, y] = Array.isArray(xy) ? xy : [xy, 0];
-
-    if (!this.options.xyMode) {
-      return x;
+  mapButtonFromXy(xy: ButtonIn): number {
+    if (isButton(xy)) {
+      return xy.nr;
     }
+
+    if (typeof xy === 'number') {
+      return xy;
+    }
+
+    const [x, y] = xy;
 
     // top row
     if (y === 0) {

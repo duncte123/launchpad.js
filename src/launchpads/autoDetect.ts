@@ -14,16 +14,6 @@ export interface AutoDetectOptions {
    * @default false
    */
   readonly debug?: boolean;
-
-  /**
-   * Switch on X/Y mode
-   *
-   * In X/Y mode, buttons are represented as [x, y]
-   * arrays (instead of raw button numbers).
-   *
-   * @default false
-   */
-  readonly xyMode?: boolean;
 }
 
 export function autoDetect(options?: AutoDetectOptions): BaseLaunchpad {
@@ -38,7 +28,7 @@ export function autoDetect(options?: AutoDetectOptions): BaseLaunchpad {
     return new LaunchpadMK3(options);
   }
 
-  throw new Error(`Did not find supported Launchpads among MIDI devices: ${inputNames.join(', ') ?? '(none)'}`);
+  throw new Error(`Did not find supported Launchpads among MIDI devices: ${inputNames.join(', ') || '(none)'}`);
 
   function canFindBoth(regex: RegExp): boolean {
     return inputNames.some(n => n.match(regex)) && outputNames.some(n => n.match(regex));
