@@ -4,9 +4,21 @@ if (module.require.cache[require.resolve('midi')]) {
 
 jest.mock('midi');
 import * as midi from 'midi';
+import { EventEmitter } from 'stream';
 
-export const mockedInput = jest.mocked(new midi.Input(), true);
+
+// mockedOutput is a simple mock object
 export const mockedOutput = jest.mocked(new midi.Output(), true);
+
+// mockedInput is ugly: it's a REAL event emitter with some
+// mock functions added on top
+export const mockedInput: jest.MockedObject<midi.Input> = Object.assign(
+  new EventEmitter(),
+  {
+    getPortCount: jest.fn(),
+    getPortName: jest.fn(),
+    openPort: jest.fn(),
+  }) as any;
 
 jest.mocked(midi.Input).mockReturnValue(mockedInput);
 jest.mocked(midi.Output).mockReturnValue(mockedOutput);

@@ -1,5 +1,5 @@
-import { givenMidiDevices, mockedOutput } from './mocking-midi';
-import { autoDetect, colors, LaunchpadMK2, LaunchpadMK3, waitForReady } from '../src';
+import { givenMidiDevices, mockedInput, mockedOutput } from './mocking-midi';
+import { autoDetect, Button, colors, LaunchpadMK2, LaunchpadMK3, waitForReady } from '../src';
 
 let lp: LaunchpadMK2;
 beforeEach(async () => {
@@ -76,9 +76,42 @@ describe('x/y mapping', () => {
 });
 
 describe('events', () => {
-  test('buttonDown', () => {
+  test('buttonDown grid', async () => {
+    const buttonDown = new Promise<Button>(ok => lp.once('buttonDown', ok));
+    mockedInput.emit('message', 0, [
+      144, // Normal note
+      64,  // nr
+      1]); // down
+    const button = await buttonDown;
+
+    expect(button).toEqual({
+      nr: 64,
+      xy: [3, 3],
+    });
   });
 
-  test('buttonUp', () => {
+  test('buttonDown top row', async () => {
+    const buttonDown = new Promise<Button>(ok => lp.once('buttonDown', ok));
+    mockedInput.emit('message', 0, [
+      176, // Control note
+      107, // Nr
+      1]); // Down
+    const button = await buttonDown;
+
+    expect(button).toEqual({
+      nr: 107,
+      xy: [3, 0],
+    });
+  });
+
+  test('buttonUp', async () => {
+    const buttonUp = new Promise<Button>(ok => lp.once('buttonUp', ok));
+    mockedInput.emit('message', 0, [144, 64, 0]);
+    const button = await buttonUp;
+
+    expect(button).toEqual({
+      nr: 64,
+      xy: [3, 3],
+    });
   });
 });
