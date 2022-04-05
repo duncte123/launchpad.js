@@ -24,7 +24,7 @@ export interface ILaunchpad extends EventEmitter<EventTypes> {
    *
    * @abstract
    */
-  setButtonColor(button: ButtonIn, color: number[]): void;
+  setButtonColor(button: ButtonIn, color: [number, number, number]): void;
 
   /**
    * Tells the launchpad to start flashing a button between the current color and {@param color}<br>

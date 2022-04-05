@@ -16,6 +16,11 @@ export interface AutoDetectOptions {
   readonly debug?: boolean;
 }
 
+/**
+ * Scan the MIDI devices and return the Launchpad implementation matching the detected devices
+ *
+ * Throws an error if no supported Launchpad device is detected.
+ */
 export function autoDetect(options?: AutoDetectOptions): ILaunchpad {
   const inputNames = allDeviceNames(new midi.Input());
   const outputNames = allDeviceNames(new midi.Output());

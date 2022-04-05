@@ -5,8 +5,8 @@ if (module.require.cache[require.resolve('midi')]) {
 jest.mock('midi');
 import * as midi from 'midi';
 
-const mockedInput = jest.mocked(new midi.Input(), true);
-const mockedOutput = jest.mocked(new midi.Output(), true);
+export const mockedInput = jest.mocked(new midi.Input(), true);
+export const mockedOutput = jest.mocked(new midi.Output(), true);
 
 jest.mocked(midi.Input).mockReturnValue(mockedInput);
 jest.mocked(midi.Output).mockReturnValue(mockedOutput);
