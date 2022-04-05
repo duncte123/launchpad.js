@@ -1,6 +1,6 @@
 import midi from 'midi';
 import { allDeviceNames } from '../utils';
-import BaseLaunchpad from './base/BaseLaunchpad';
+import { ILaunchpad } from './base/ILaunchpad';
 import { LaunchpadMK2 } from './MK2/LaunchpadMK2';
 import { LaunchpadMK3 } from './MK3/LaunchpadMK3';
 
@@ -16,7 +16,7 @@ export interface AutoDetectOptions {
   readonly debug?: boolean;
 }
 
-export function autoDetect(options?: AutoDetectOptions): BaseLaunchpad {
+export function autoDetect(options?: AutoDetectOptions): ILaunchpad {
   const inputNames = allDeviceNames(new midi.Input());
   const outputNames = allDeviceNames(new midi.Output());
 

@@ -1,5 +1,7 @@
 import EventEmitter from 'eventemitter3';
-import { Button, ButtonIn } from './types';
+import midi from 'midi';
+import { findDevice, onExit } from '../../utils';
+import { Button, ButtonIn, EventTypes, ILaunchpad } from './ILaunchpad';
 
 export interface BaseLaunchpadOptions {
 
@@ -21,122 +23,156 @@ export interface BaseLaunchpadOptions {
   readonly debug?: boolean;
 }
 
+
 /**
- * base class for interacting with a launchpad<br>
- *   each sub class must close the port to the launchpad when the application is exited<br>
- *   to have a consistent event system across the project every subclass must implement the following events listed
+ * Shared implementation between multiple Launchpad types
  *
- * This class can be used to create your own launchpad implementations
+ * This class can be used to create your own launchpad implementations.
  *
- * @event ready The API is ready to be used with the launchpad
- * @event rawMessage Messages from the launchpad are forwarded to this event
- * @event buttonDown A button on the launchpad has been pressed
- * @event buttonUp A button on the launchpad has been released
- *
- * @abstract
+ * Each sub class must close the port to the launchpad when the application is exited
+ * to have a consistent event system across the project every subclass must implement the following events listed.
  */
-// cuz this is an abstract class
-/* eslint-disable no-unused-vars */
-export default abstract class BaseLaunchpad extends EventEmitter<EventTypes> {
+export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements ILaunchpad {
+  protected readonly input = new midi.Input();
+  protected readonly output = new midi.Output();
+
+  constructor(protected readonly options: BaseLaunchpadOptions = {}) {
+    super();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public abstract setButtonColor(button: ButtonIn, color: number[]): void;
+
+  /**
+   * @inheritDoc
+   */
+  public abstract flash(button: ButtonIn, color: number, color2?: number): void;
+
+  /**
+   * @inheritDoc
+   */
+  public abstract pulse(button: ButtonIn, color: number): void;
+
+  /**
+   * @inheritDoc
+   */
+  public abstract allOff(): void;
+
+  /**
+   * Make a SysEx message from the given payload
+   *
+   * (Wrap the payload with the necessary bytes)
+   */
+  protected abstract makeSysEx(payload: number[]): number[];
 
   /**
    * Send a midi message to the launchpad
-   * @param {number} message the message to send to the launchpad
    *
-   * @abstract
+   * @param {number} message the message to send to the launchpad
    */
-  abstract send(...message: number[]): void;
+  protected send(message: number[]): void;
+  protected send(...message: number[]): void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  protected send(...message: any[]): void {
+    this.logDebug('Sending midi message', message);
+    this.output.sendMessage(Array.isArray(message[0]) ? message[0] : message as number[]);
+  }
 
   /**
    * Send a System Exclusive message to the launchpad.
-   * <br> The header and terminator have already been put in place by this method.
+   *
+   * The method will add the necessary header and footer.
    *
    * @param {number} message The 6th byte + 4 values for the SysEx message
-   *
-   * @abstract
    */
-  abstract sendSysEx(...message: number[]): void;
+  protected sendSysEx(message: number[]): void;
+  protected sendSysEx(...message: number[]): void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  protected sendSysEx(...message: any[]): void {
+    const arrayParsed = Array.isArray(message[0]) ? message[0] : message;
+    const sysExMessage = this.makeSysEx(arrayParsed);
+    this.logDebug('Sending sysExMessage', sysExMessage);
+
+    this.output.sendMessage(sysExMessage);
+  }
 
   /**
-   * Sets the color for a button on the Launchpad <br>
-   * The button is an array of x and y when xyMode is turned on
+   * Find and initialite the MIDI device matching the given regex
    *
-   * @param {number|number[]} button The grid button to set the color for
-   * @param {Array<number>} color the color to set for the button, the array is an RGB array
-   *
-   * @abstract
+   * Call this from the subclass constructors.
    */
-  abstract setButtonColor(button: ButtonIn, color: number[]): void;
+  protected openMidiDevice(deviceName: RegExp): void {
+    const [inputPort, outputPort] = [
+      findDevice(deviceName, this.input),
+      findDevice(deviceName, this.output),
+    ];
 
-  /**
-   * Tells the launchpad to start flashing a button between the current color and {@param color}<br>
-   *   <b>IMPORTANT:</b> flashing and pulsing only works for buttons that are on the grid <br>
-   * The button is an array of x and y when xyMode is turned on
-   *
-   * Not all Launchpads support a second color. For those, the
-   * second color is ignored.
-   *
-   * @param {number|number[]} button The grid button to start flashing
-   * @param {number} color A color from the primary color chart, result to your launchpad's programming manual for more info
-   * @param {number} color2 A color from the primary color chart, result to your launchpad's programming manual for more info.
-   *
-   * @throws {Error} if the color is out of the launchpad's range
-   *
-   * @abstract
-   */
-  abstract flash(button: ButtonIn, color: number, color2?: number): void;
+    onExit(() => this.closePorts());
 
-  /**
-   * Tells the launchpad to start pulsing a button between the current color and {@param color}<br>
-   *   <b>IMPORTANT:</b> flashing and pulsing only works for buttons that are on the grid <br>
-   * The button is an array of x and y when xyMode is turned on
-   *
-   * @param {number|number[]} button The grid button to start flashing
-   * @param {number} color A color from the primary color chart, result to your launchpad's programming manual for more info
-   *
-   * @throws {Error} if the color is out of the launchpad's range
-   *
-   * @abstract
-   */
-  abstract pulse(button: ButtonIn, color: number): void;
+    this.output.openPort(outputPort);
+    this.input.openPort(inputPort);
 
-  /**
-   * Turns all the lights on the launchpad off
-   *
-   * @abstract
-   */
-  abstract allOff(): void;
+    process.nextTick(() => {
+      this.emit('ready', this.input.getPortName(inputPort));
+    });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  protected logDebug(...message: any[]): void {
+    if (this.options.debug) {
+      console.log('[Launchpad Debug]', ...message);
+    }
+  }
+
+  protected setupMessageHandler(): void {
+    this.input.on('message', (deltaTime: number, message: number[]) => {
+      this.logDebug(`m: ${message} d: ${deltaTime}`);
+      this.internalMessageHandler(message);
+    });
+  }
+
+  private internalMessageHandler(message: number[]): void {
+    this.emit('rawMessage', message);
+
+    const [state, note, value] = message;
+    const button = this.parseButtonToXy(state, note);
+
+    const event = Boolean(value) ? 'buttonDown' : 'buttonUp';
+    this.emit(event, button);
+  }
 
   /**
    * Closes the connection with the launchpad
-   *
-   * @abstract
    */
-  abstract closePorts(): void;
+  protected closePorts(): void {
+    this.logDebug('Closing ports');
+
+    this.allOff();
+    this.input.closePort();
+    this.output.closePort();
+  }
 
   /**
-   * Parses a button to a Button structure
-   *
-   * @param {number} state The state of the button that was pressed
-   * @param {number} note The button that was pressed on the launchpad
-   *
-   * @returns {Button} A structure with both button number and X/Y coordinates
+   * @inheritDoc
    */
-  abstract parseButtonToXy(state: number, note: number): Button;
+  public eventNames(): Array<EventEmitter.EventNames<EventTypes>> {
+    return [
+      'ready',
+      'rawMessage',
+      'buttonDown',
+      'buttonUp',
+    ];
+  }
 
   /**
-   * Returns the button number given a number, [x, y] coordinates, or a structure
-   *
-   * @param {number|[number,number]|Button} xy Information about the button
-   *
-   * @returns {number} The button on the launchpad for this coordinate
+   * Map the Launchpad output to a Button structure
    */
-  abstract mapButtonFromXy(xy: ButtonIn): number;
+  public abstract parseButtonToXy(state: number, note: number): Button;
+
+  /**
+   * Determine the button number from any of the possible ways to specify a button
+   */
+  public abstract mapButtonFromXy(xy: ButtonIn): number;
 }
-
-export interface EventTypes {
-  ready: (deviceName: string) => void,
-  'rawMessage': (message: number[]) => void,
-  'buttonDown': (button: Button) => void,
-  'buttonUp': (button: Button) => void,
- }

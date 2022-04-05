@@ -1,12 +1,11 @@
-import { BaseLaunchpadOptions } from '../base/BaseLaunchpad';
-import { CommonLaunchpad } from '../base/CommonLaunchpad';
-import { Button, ButtonIn, isButton } from '../base/types';
+import { BaseLaunchpad, BaseLaunchpadOptions } from '../base/BaseLaunchpad';
+import { Button, ButtonIn, isButton } from '../base/ILaunchpad';
 import { ButtonColor } from './ButtonColor';
 import { SysEx } from './SysEx';
 
 export type LaunchpadMK3Options = BaseLaunchpadOptions;
 
-export class LaunchpadMK3 extends CommonLaunchpad {
+export class LaunchpadMK3 extends BaseLaunchpad {
   public static readonly DEFAULT_DEVICE_NAME = /^Launchpad.*MK3 MIDI/;
 
   /**

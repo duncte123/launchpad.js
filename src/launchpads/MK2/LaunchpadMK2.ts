@@ -1,12 +1,11 @@
 import { CONTROL_NOTE, NORMAL_NOTE } from '../../utils';
-import { BaseLaunchpadOptions } from '../base/BaseLaunchpad';
 import { minMaxColor } from '../../colorHelpers';
-import { CommonLaunchpad } from '../base/CommonLaunchpad';
-import { Button, ButtonIn, isButton } from '../base/types';
+import { BaseLaunchpad, BaseLaunchpadOptions } from '../base/BaseLaunchpad';
+import { Button, ButtonIn, isButton } from '../base/ILaunchpad';
 
 export type LaunchpadMK2Options = BaseLaunchpadOptions;
 
-export class LaunchpadMK2 extends CommonLaunchpad {
+export class LaunchpadMK2 extends BaseLaunchpad {
   public static readonly DEFAULT_DEVICE_NAME = /^Launchpad MK2/;
 
   /**
