@@ -14,16 +14,6 @@ export interface AutoDetectOptions {
    * @default false
    */
   readonly debug?: boolean;
-
-  /**
-   * Switch on X/Y mode
-   *
-   * In X/Y mode, buttons are represented as [x, y]
-   * arrays (instead of raw button numbers).
-   *
-   * @default false
-   */
-  readonly xyMode?: boolean;
 }
 
 export function autoDetect(options?: AutoDetectOptions): BaseLaunchpad {

@@ -1,6 +1,8 @@
+import EventEmitter from 'eventemitter3';
 import midi from 'midi';
 import { findDevice, onExit } from '../../utils';
-import BaseLaunchpad, { BaseLaunchpadOptions } from './BaseLaunchpad';
+import BaseLaunchpad, { BaseLaunchpadOptions, EventTypes } from './BaseLaunchpad';
+import { Button, ButtonIn } from './types';
 
 /**
  * Shared implementation between multiple Launchpad types
@@ -86,8 +88,8 @@ export abstract class CommonLaunchpad extends BaseLaunchpad {
     const [state, note, value] = message;
     const button = this.parseButtonToXy(state, note);
 
-    const upDown = Boolean(value) ? 'Down' : 'Up';
-    this.emit(`button${upDown}`, button, value);
+    const event = Boolean(value) ? 'buttonDown' : 'buttonUp';
+    this.emit(event, button);
   }
 
   /**
@@ -104,7 +106,7 @@ export abstract class CommonLaunchpad extends BaseLaunchpad {
   /**
    * @inheritDoc
    */
-  public eventNames(): string[] {
+  public eventNames(): Array<EventEmitter.EventNames<EventTypes>> {
     return [
       'ready',
       'rawMessage',
@@ -113,6 +115,6 @@ export abstract class CommonLaunchpad extends BaseLaunchpad {
     ];
   }
 
-  public abstract parseButtonToXy(state: number, note: number): number[] | number;
-  public abstract mapButtonFromXy(xy: number[] | number): number;
+  public abstract parseButtonToXy(state: number, note: number): Button;
+  public abstract mapButtonFromXy(xy: ButtonIn): number;
 }

@@ -1,4 +1,5 @@
 import EventEmitter from 'eventemitter3';
+import { Button, ButtonIn } from './types';
 
 export interface BaseLaunchpadOptions {
 
@@ -18,16 +19,6 @@ export interface BaseLaunchpadOptions {
    * @default false
    */
   readonly debug?: boolean;
-
-  /**
-   * Switch on X/Y mode
-   *
-   * In X/Y mode, buttons are represented as [x, y]
-   * arrays (instead of raw button numbers).
-   *
-   * @default false
-   */
-  readonly xyMode?: boolean;
 }
 
 /**
@@ -46,7 +37,7 @@ export interface BaseLaunchpadOptions {
  */
 // cuz this is an abstract class
 /* eslint-disable no-unused-vars */
-export default abstract class BaseLaunchpad extends EventEmitter {
+export default abstract class BaseLaunchpad extends EventEmitter<EventTypes> {
 
   /**
    * Send a midi message to the launchpad
@@ -75,7 +66,7 @@ export default abstract class BaseLaunchpad extends EventEmitter {
    *
    * @abstract
    */
-  abstract setButtonColor(button: number|number[], color: number[]): void;
+  abstract setButtonColor(button: ButtonIn, color: number[]): void;
 
   /**
    * Tells the launchpad to start flashing a button between the current color and {@param color}<br>
@@ -93,7 +84,7 @@ export default abstract class BaseLaunchpad extends EventEmitter {
    *
    * @abstract
    */
-  abstract flash(button: number|number[], color: number, color2?: number): void;
+  abstract flash(button: ButtonIn, color: number, color2?: number): void;
 
   /**
    * Tells the launchpad to start pulsing a button between the current color and {@param color}<br>
@@ -107,7 +98,7 @@ export default abstract class BaseLaunchpad extends EventEmitter {
    *
    * @abstract
    */
-  abstract pulse(button: number|number[], color: number): void;
+  abstract pulse(button: ButtonIn, color: number): void;
 
   /**
    * Turns all the lights on the launchpad off
@@ -124,24 +115,28 @@ export default abstract class BaseLaunchpad extends EventEmitter {
   abstract closePorts(): void;
 
   /**
-   * Parses a button to an [x, y] coordinate
+   * Parses a button to a Button structure
    *
    * @param {number} state The state of the button that was pressed
    * @param {number} note The button that was pressed on the launchpad
    *
-   * @return {number[]|number} Only returns the array if xyMode is enabled
+   * @returns {Button} A structure with both button number and X/Y coordinates
    */
-  abstract parseButtonToXy(state: number, note: number): number[]|number;
+  abstract parseButtonToXy(state: number, note: number): Button;
 
   /**
-   * Gets the correct button on a launchpad given an [x, y] coordinate<br>
-   *   IMPORTANT: this method will return the value of x when xyMode is disabled
+   * Returns the button number given a number, [x, y] coordinates, or a structure
    *
-   *
-   * @param {number} x The x position, 0 based
-   * @param {number} y The y position, 0 based
+   * @param {number|[number,number]|Button} xy Information about the button
    *
    * @returns {number} The button on the launchpad for this coordinate
    */
-  abstract mapButtonFromXy([x, y]: [number, number]): number;
+  abstract mapButtonFromXy(xy: ButtonIn): number;
 }
+
+export interface EventTypes {
+  ready: (deviceName: string) => void,
+  'rawMessage': (message: number[]) => void,
+  'buttonDown': (button: Button) => void,
+  'buttonUp': (button: Button) => void,
+ }

@@ -1,5 +1,6 @@
 import { BaseLaunchpadOptions } from '../base/BaseLaunchpad';
 import { CommonLaunchpad } from '../base/CommonLaunchpad';
+import { Button, ButtonIn, isButton } from '../base/types';
 import { ButtonColor } from './ButtonColor';
 import { SysEx } from './SysEx';
 
@@ -36,7 +37,7 @@ export class LaunchpadMK3 extends CommonLaunchpad {
   /**
    * @inheritDoc
    */
-  setButtonColor(button: number|number[], color: number[]): void {
+  setButtonColor(button: ButtonIn, color: number[]): void {
     if (!Array.isArray(color) || color.length !== 3) {
       throw new Error('Invalid color settings supplied');
     }
@@ -56,7 +57,7 @@ export class LaunchpadMK3 extends CommonLaunchpad {
   /**
    * @inheritDoc
    */
-  flash(button: number|number[], color: number, colorB: number = 0): void {
+  flash(button: ButtonIn, color: number, colorB: number = 0): void {
     const buttonMapped = this.mapButtonFromXy(button);
 
     this.sendSysEx(...SysEx.setButtonColors(ButtonColor.flash(buttonMapped, color, colorB)));
@@ -65,7 +66,7 @@ export class LaunchpadMK3 extends CommonLaunchpad {
   /**
    * @inheritDoc
    */
-  pulse(button: number|number[], color: number): void {
+  pulse(button: ButtonIn, color: number): void {
     const buttonMapped = this.mapButtonFromXy(button);
 
     this.sendSysEx(...SysEx.setButtonColors(ButtonColor.pulse(buttonMapped, color)));
@@ -81,27 +82,29 @@ export class LaunchpadMK3 extends CommonLaunchpad {
   /**
    * @inheritDoc
    */
-  parseButtonToXy(state: number, note: number): number[]|number {
-    if (!this.options.xyMode) {
-      return note;
-    }
-
+  parseButtonToXy(state: number, note: number): Button {
     const row = Math.floor(note / 10);
     const col = (note - 1) % 10;
 
-    return [col, 9 - row];
+    return {
+      nr: note,
+      xy: [col, 9 - row],
+    };
   }
 
   /**
    * @inheritDoc
    */
-  mapButtonFromXy(xy: number[]|number): number {
-    const [x, y] = Array.isArray(xy) ? xy : [xy, 0];
-
-    if (!this.options.xyMode) {
-      return x;
+  mapButtonFromXy(xy: ButtonIn): number {
+    if (isButton(xy)) {
+      return xy.nr;
     }
 
+    if (typeof xy === 'number') {
+      return xy;
+    }
+
+    const [x, y] = xy;
     return (9 - y) * 10 + x + 1;
   }
 }
