@@ -12,21 +12,37 @@ export const mockedOutput = jest.mocked(new midi.Output(), true);
 
 // mockedInput is ugly: it's a REAL event emitter with some
 // mock functions added on top
-export const mockedInput: jest.MockedObject<midi.Input> = Object.assign(
-  new EventEmitter(),
-  {
-    getPortCount: jest.fn(),
-    getPortName: jest.fn(),
-    openPort: jest.fn(),
-  }) as any;
-
-jest.mocked(midi.Input).mockReturnValue(mockedInput);
+// eslint-disable-next-line init-declarations
+export let mockedInput: jest.MockedObject<midi.Input>;
 jest.mocked(midi.Output).mockReturnValue(mockedOutput);
 
 /**
- * Pretend the given MIDI devices are reported by the midi module
+ * Reset the mocked MIDI Input to a fresh EventEmitter
  */
-export function givenMidiDevices(names: string[]) {
+export function resetMockedInput(): void {
+  mockedInput = Object.assign(
+    new EventEmitter(),
+    {
+      getPortCount: jest.fn(),
+      getPortName: jest.fn(),
+      openPort: jest.fn(),
+      closePort: jest.fn(),
+    }
+  ) as any;
+  jest.mocked(midi.Input).mockReturnValue(mockedInput);
+}
+
+resetMockedInput();
+
+/**
+ * Pretend the given MIDI devices are reported by the midi module.
+ *
+ * This function needs to be called in the `beforeEach()` of every
+ * test to reset the mocks.
+ */
+export function givenMidiDevices(names: string[]): void {
+  resetMockedInput();
+
   mockedInput.getPortCount.mockReturnValue(names.length);
   mockedOutput.getPortCount.mockReturnValue(names.length);
 

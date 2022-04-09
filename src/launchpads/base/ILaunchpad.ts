@@ -78,6 +78,27 @@ export interface ILaunchpad extends EventEmitter<EventTypes> {
    * @abstract
    */
   allOff(): void;
+
+  /**
+   * Set the color for multiple buttons at once
+   *
+   * Accepts a variable number of `{ button, style }` objects, and will
+   * update all buttons in one go with as few MIDI commands as possible.
+   *
+   * The styles can be all different, though for the MK2 Launchpad
+   * it will be most efficient if all styles are the same.
+   *
+   * @param {ButtonStyle[]} buttons The buttons to set
+   */
+  setButtons(...buttons: ButtonStyle[]): void;
+
+  /**
+   * Close the connection to the MIDI device
+   *
+   * This will automatically be called when your process exits. You probably
+   * don't need to call this.
+   */
+  close(): void;
 }
 
 export interface EventTypes {
@@ -132,3 +153,22 @@ export type PaletteColor = number;
 export function isButton(x: ButtonIn): x is Button {
   return x !== null && typeof x === 'object' && 'nr' in x;
 }
+
+export interface ButtonStyle {
+
+  /**
+   * The button to set the light of
+   */
+  readonly button: ButtonIn;
+
+  /**
+   * The button style to set
+   */
+  readonly style: Style;
+}
+
+export type Style =
+  | { readonly style: 'palette'; readonly color: number }
+  | { readonly style: 'flash'; readonly color: number, readonly colorB?: number }
+  | { readonly style: 'pulse'; readonly color: number }
+  | { readonly style: 'rgb'; readonly rgb: RgbColor };

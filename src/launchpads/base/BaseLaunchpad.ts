@@ -1,7 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import midi from 'midi';
 import { findDevice, onExit } from '../../utils';
-import { Button, ButtonIn, EventTypes, ILaunchpad, PaletteColor, RgbColor } from './ILaunchpad';
+import { Button, ButtonIn, ButtonStyle, EventTypes, ILaunchpad, PaletteColor, RgbColor, Style } from './ILaunchpad';
 
 export interface BaseLaunchpadOptions {
 
@@ -35,6 +35,7 @@ export interface BaseLaunchpadOptions {
 export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements ILaunchpad {
   protected readonly input = new midi.Input();
   protected readonly output = new midi.Output();
+  protected open = false;
 
   constructor(protected readonly options: BaseLaunchpadOptions = {}) {
     super();
@@ -59,6 +60,11 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
    * @inheritDoc
    */
   public abstract allOff(): void;
+
+  /**
+   * @inheritDoc
+   */
+  public abstract setButtons(...buttons: ButtonStyle[]): void;
 
   /**
    * Make a SysEx message from the given payload
@@ -109,10 +115,12 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
       findDevice(deviceName, this.output),
     ];
 
-    onExit(() => this.closePorts());
+    onExit(() => this.close());
 
     this.output.openPort(outputPort);
     this.input.openPort(inputPort);
+
+    this.open = true;
 
     process.nextTick(() => {
       this.emit('ready', this.input.getPortName(inputPort));
@@ -146,12 +154,18 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
   /**
    * Closes the connection with the launchpad
    */
-  protected closePorts(): void {
+  public close(): void {
+    if (!this.open) {
+      return;
+    }
+
     this.logDebug('Closing ports');
 
     this.allOff();
     this.input.closePort();
     this.output.closePort();
+    this.input.removeAllListeners('message');
+    this.open = false;
   }
 
   /**
@@ -200,4 +214,30 @@ export function validateRgbColor(color: RgbColor): RgbColor {
 
 export function isRgbColor(color: PaletteColor | RgbColor): color is RgbColor {
   return Array.isArray(color);
+}
+
+export function groupByStyle(styles: ButtonStyle[]): GroupedStyles {
+  const ret: GroupedStyles = {
+    flash: [],
+    palette: [],
+    pulse: [],
+    rgb: [],
+  };
+  for (const obj of styles) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any,no-extra-parens
+    (ret[obj.style.style] as any[]).push(obj);
+  }
+  return ret;
+}
+
+export type ButtonWithStyle<K extends string> = {
+  readonly button: ButtonIn;
+  readonly style: Extract<Style, { style: K }>;
+}
+
+export interface GroupedStyles {
+  readonly palette: Array<ButtonWithStyle<'palette'>>;
+  readonly rgb: Array<ButtonWithStyle<'rgb'>>;
+  readonly flash: Array<ButtonWithStyle<'flash'>>;
+  readonly pulse: Array<ButtonWithStyle<'pulse'>>;
 }
