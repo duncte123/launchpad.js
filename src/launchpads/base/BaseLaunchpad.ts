@@ -191,8 +191,8 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
  * Make sure a color is a valid color in the palette
  */
 export function validatePaletteColor(color: PaletteColor): PaletteColor {
-  if (color < 0 || color > 63 || Math.floor(color) !== color) {
-    throw new Error(`Not a valid palette color: ${color} (must be an int between 0..63)`);
+  if (color < 0 || color > 127 || Math.floor(color) !== color) {
+    throw new Error(`Not a valid palette color: ${color} (must be an int between 0..127)`);
   }
   return color;
 }

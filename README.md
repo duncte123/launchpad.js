@@ -73,7 +73,7 @@ The follow methods control a button's color:
 
 - `lp.setButtonColor(button, colorOrRGB)`: set a button to a solid color.
   `colorOrRGB` is either:
-  - `number` between 0..63, a color in the 64-color palette of the Launchpad.
+  - `number` between 0..127, a color in the 128-color palette of the Launchpad.
   - `[r, g, b]`, an array of RGB values between 0 and 1.
 - `lp.flash(button, color, colorB?)`: flash a button between two palette
   colors. For colors that don't support a second color, the button will flash
