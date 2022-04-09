@@ -94,7 +94,8 @@ export class LaunchpadMK2 extends BaseLaunchpad {
       ];
     }
 
-    return { nr: note, xy };
+    return { nr: note,
+      xy };
   }
 
   /**

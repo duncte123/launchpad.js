@@ -15,6 +15,7 @@ import EventEmitter from 'eventemitter3';
 // cuz this is an abstract class
 /* eslint-disable no-unused-vars */
 export interface ILaunchpad extends EventEmitter<EventTypes> {
+
   /**
    * Sets the color for a button on the Launchpad
    *
@@ -86,12 +87,13 @@ export interface EventTypes {
   buttonUp: (button: Button) => void;
  }
 
- /**
+/**
  * Buttons reported by events
  *
  * Offers both number and [x, y] coordinates.
  */
 export interface Button {
+
   /**
    * Button number
    *
@@ -128,5 +130,5 @@ export type RgbColor = [number, number, number];
 export type PaletteColor = number;
 
 export function isButton(x: ButtonIn): x is Button {
-  return x != null && typeof x === 'object' && 'nr' in x;
+  return x !== null && typeof x === 'object' && 'nr' in x;
 }

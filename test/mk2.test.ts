@@ -1,3 +1,6 @@
+/* eslint-disable init-declarations */
+/* eslint-disable max-lines-per-function */
+/* eslint-disable no-promise-executor-return */
 import { givenMidiDevices, mockedInput, mockedOutput } from './mocking-midi';
 import { Button, colors, LaunchpadMK2, waitForReady } from '../src';
 
@@ -17,11 +20,13 @@ describe('SysEx messages', () => {
     lp.setButtonColor(55, colors.defaultColors.red);
 
     // THEN
-    expect(mockedOutput.sendMessage).toHaveBeenCalledWith([...HEADER,
+    expect(mockedOutput.sendMessage).toHaveBeenCalledWith([
+      ...HEADER,
       11, // setrgb
       55,
       63, 0, 0,
-      247]);
+      247
+    ]);
   });
 
   test('setButtonColor sends the right SysEx message given a palette color', () => {
@@ -29,11 +34,13 @@ describe('SysEx messages', () => {
     lp.setButtonColor(55, 24);
 
     // THEN
-    expect(mockedOutput.sendMessage).toHaveBeenCalledWith([...HEADER,
+    expect(mockedOutput.sendMessage).toHaveBeenCalledWith([
+      ...HEADER,
       10, // setpalette
       55,
       24,
-      247]);
+      247
+    ]);
   });
 
   test('flash sends the right SysEx message given a button number', () => {
@@ -41,11 +48,13 @@ describe('SysEx messages', () => {
     lp.flash(55, 42);
 
     // THEN
-    expect(mockedOutput.sendMessage).toHaveBeenCalledWith([...HEADER,
+    expect(mockedOutput.sendMessage).toHaveBeenCalledWith([
+      ...HEADER,
       35, 0, // flash
       55,
       42,
-      247]);
+      247
+    ]);
   });
 
   test('pulse sends the right SysEx message given a button number', () => {
@@ -53,11 +62,13 @@ describe('SysEx messages', () => {
     lp.pulse(55, 42);
 
     // THEN
-    expect(mockedOutput.sendMessage).toHaveBeenCalledWith([...HEADER,
+    expect(mockedOutput.sendMessage).toHaveBeenCalledWith([
+      ...HEADER,
       40, 0, // pulse
       55,
       42,
-      247]);
+      247
+    ]);
   });
 });
 
@@ -67,11 +78,13 @@ describe('x/y mapping', () => {
     lp.setButtonColor([3, 3], colors.defaultColors.red);
 
     // THEN
-    expect(mockedOutput.sendMessage).toHaveBeenCalledWith([...HEADER,
+    expect(mockedOutput.sendMessage).toHaveBeenCalledWith([
+      ...HEADER,
       11, // setrgb
       64, // 0-base (3, 3) from the top-left is 1-base (6, 4) from bottom-left
       63, 0, 0,
-      247]);
+      247
+    ]);
   });
 
   test('setButtonColor addresses the top row correctly', () => {
@@ -79,11 +92,13 @@ describe('x/y mapping', () => {
     lp.setButtonColor([3, 0], colors.defaultColors.red);
 
     // THEN
-    expect(mockedOutput.sendMessage).toHaveBeenCalledWith([...HEADER,
+    expect(mockedOutput.sendMessage).toHaveBeenCalledWith([
+      ...HEADER,
       11, // setrgb
       107, // top row is addressed starting at 104, for some reason
       63, 0, 0,
-      247]);
+      247
+    ]);
   });
 });
 
@@ -92,8 +107,9 @@ describe('events', () => {
     const buttonDown = new Promise<Button>(ok => lp.once('buttonDown', ok));
     mockedInput.emit('message', 0, [
       144, // Normal note
-      64,  // nr
-      1]); // down
+      64, // nr
+      1
+    ]); // down
     const button = await buttonDown;
 
     expect(button).toEqual({
@@ -107,7 +123,8 @@ describe('events', () => {
     mockedInput.emit('message', 0, [
       176, // Control note
       107, // Nr
-      1]); // Down
+      1
+    ]); // Down
     const button = await buttonDown;
 
     expect(button).toEqual({

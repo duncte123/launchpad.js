@@ -36,7 +36,7 @@ export class LaunchpadMK3 extends BaseLaunchpad {
   /**
    * @inheritDoc
    */
-  setButtonColor(button: ButtonIn, color: RgbColor  | PaletteColor): void {
+  setButtonColor(button: ButtonIn, color: RgbColor | PaletteColor): void {
     if (typeof color !== 'number' && (!Array.isArray(color) || color.length !== 3)) {
       throw new Error('Invalid color settings supplied');
     }
@@ -45,11 +45,9 @@ export class LaunchpadMK3 extends BaseLaunchpad {
 
     if (isRgbColor(color)) {
       const [r, g, b] = validateRgbColor(color).map(v => Math.round(v * 127));
-      this.sendSysEx(...SysEx.setButtonColors(ButtonColor.rgb(
-        buttonMapped, r, g, b)));
+      this.sendSysEx(...SysEx.setButtonColors(ButtonColor.rgb(buttonMapped, r, g, b)));
     } else {
-      this.sendSysEx(...SysEx.setButtonColors(ButtonColor.staticColor(
-        buttonMapped, validatePaletteColor(color))));
+      this.sendSysEx(...SysEx.setButtonColors(ButtonColor.staticColor(buttonMapped, validatePaletteColor(color))));
     }
   }
 
@@ -59,10 +57,11 @@ export class LaunchpadMK3 extends BaseLaunchpad {
   flash(button: ButtonIn, color: number, colorB: number = 0): void {
     const buttonMapped = this.mapButtonFromXy(button);
 
-    this.sendSysEx(...SysEx.setButtonColors(
-      ButtonColor.flash(buttonMapped,
-        validatePaletteColor(color),
-        validatePaletteColor(colorB))));
+    this.sendSysEx(...SysEx.setButtonColors(ButtonColor.flash(
+      buttonMapped,
+      validatePaletteColor(color),
+      validatePaletteColor(colorB)
+    )));
   }
 
   /**
@@ -71,9 +70,10 @@ export class LaunchpadMK3 extends BaseLaunchpad {
   pulse(button: ButtonIn, color: number): void {
     const buttonMapped = this.mapButtonFromXy(button);
 
-    this.sendSysEx(...SysEx.setButtonColors(
-      ButtonColor.pulse(buttonMapped,
-        validatePaletteColor(color))));
+    this.sendSysEx(...SysEx.setButtonColors(ButtonColor.pulse(
+      buttonMapped,
+      validatePaletteColor(color)
+    )));
   }
 
   /**
