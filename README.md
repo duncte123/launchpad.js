@@ -51,11 +51,35 @@ lp.once('ready', (deviceName) => {
     lp.setButtonColor(button, color);
   });
 
-  lp.on('buttonUp', (button, value) => {
+  lp.on('buttonUp', (button) => {
     lp.setButtonColor(button, defaultColors.off);
   });
 });
 ```
+
+## API
+
+A number of methods are available to control the button colors on
+the LaunchPad. In all of these methods, the button to control can be
+specified in one of the following ways:
+
+- `number`, indicating a Launchpad-specific button number
+- `[x, y]`, a Launchpad-independent button coordinate with (0, 0) in
+  the top-left.
+- `Button`, a Button object (as returned by the `buttonDown` or `buttonUp`
+  event handlers).
+
+The follow methods control a button's color:
+
+- `lp.setButtonColor(button, colorOrRGB)`: set a button to a solid color.
+  `colorOrRGB` is either:
+  - `number` between 0..63, a color in the 64-color palette of the Launchpad.
+  - `[r, g, b]`, an array of RGB values between 0 and 1.
+- `lp.flash(button, color, colorB?)`: flash a button between two palette
+  colors. For colors that don't support a second color, the button will flash
+  to black.
+- `lp.pulse(button, color)`: a button will pulse between black and the given
+  palette color.
 
 ## TODO
 
