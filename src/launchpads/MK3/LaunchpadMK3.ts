@@ -1,5 +1,6 @@
+import { restrictToPalette } from '../../colorHelpers';
 import { BaseLaunchpad, BaseLaunchpadOptions } from '../base/BaseLaunchpad';
-import { Button, ButtonIn, isButton } from '../base/ILaunchpad';
+import { Button, ButtonIn, isButton, RgbColor } from '../base/ILaunchpad';
 import { ButtonColor } from './ButtonColor';
 import { SysEx } from './SysEx';
 
@@ -36,17 +37,17 @@ export class LaunchpadMK3 extends BaseLaunchpad {
   /**
    * @inheritDoc
    */
-  setButtonColor(button: ButtonIn, color: number[]): void {
+  setButtonColor(button: ButtonIn, color: RgbColor): void {
     if (!Array.isArray(color) || color.length !== 3) {
       throw new Error('Invalid color settings supplied');
     }
 
     // make sure the launchpad understands the colors we provide
-    if (color.some(value => value > 127 || value < 0)) {
-      throw new Error('RGB color is invalid, please make sure the color values are in range 0-127 (Hint: you can use colors.colorFromRGB as a helper for that');
+    if (color.some(value => value > 1 || value < 0)) {
+      throw new Error(`RGB color is invalid, please make sure the color values are between 0 and 1, got ${color} (Hint: you can use colors.colorFromRGB as a helper for that`);
     }
 
-    const [r, g, b] = color;
+    const [r, g, b] = color.map(v => Math.round(v * 127));
     const buttonMapped = this.mapButtonFromXy(button);
 
     this.sendSysEx(...SysEx.setButtonColors(ButtonColor.rgb(
@@ -59,7 +60,10 @@ export class LaunchpadMK3 extends BaseLaunchpad {
   flash(button: ButtonIn, color: number, colorB: number = 0): void {
     const buttonMapped = this.mapButtonFromXy(button);
 
-    this.sendSysEx(...SysEx.setButtonColors(ButtonColor.flash(buttonMapped, color, colorB)));
+    this.sendSysEx(...SysEx.setButtonColors(
+      ButtonColor.flash(buttonMapped,
+        restrictToPalette(color),
+        restrictToPalette(colorB))));
   }
 
   /**
@@ -68,7 +72,9 @@ export class LaunchpadMK3 extends BaseLaunchpad {
   pulse(button: ButtonIn, color: number): void {
     const buttonMapped = this.mapButtonFromXy(button);
 
-    this.sendSysEx(...SysEx.setButtonColors(ButtonColor.pulse(buttonMapped, color)));
+    this.sendSysEx(...SysEx.setButtonColors(
+      ButtonColor.pulse(buttonMapped,
+        restrictToPalette(color))));
   }
 
   /**

@@ -26,25 +26,25 @@ describe('SysEx messages', () => {
 
   test('flash sends the right SysEx message given a button number', () => {
     // WHEN
-    lp.flash(55, 86);
+    lp.flash(55, 42);
 
     // THEN
     expect(mockedOutput.sendMessage).toHaveBeenCalledWith([...HEADER,
       35, 0, // flash
       55,
-      86,
+      42,
       247]);
   });
 
   test('pulse sends the right SysEx message given a button number', () => {
     // WHEN
-    lp.pulse(55, 86);
+    lp.pulse(55, 42);
 
     // THEN
     expect(mockedOutput.sendMessage).toHaveBeenCalledWith([...HEADER,
       40, 0, // pulse
       55,
-      86,
+      42,
       247]);
   });
 });

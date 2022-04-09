@@ -1,7 +1,7 @@
 import { CONTROL_NOTE, NORMAL_NOTE } from '../../utils';
-import { minMaxColor } from '../../colorHelpers';
+import { restrictToPalette } from '../../colorHelpers';
 import { BaseLaunchpad, BaseLaunchpadOptions } from '../base/BaseLaunchpad';
-import { Button, ButtonIn, isButton } from '../base/ILaunchpad';
+import { Button, ButtonIn, isButton, RgbColor } from '../base/ILaunchpad';
 
 export type LaunchpadMK2Options = BaseLaunchpadOptions;
 
@@ -32,17 +32,17 @@ export class LaunchpadMK2 extends BaseLaunchpad {
   /**
    * @inheritDoc
    */
-  setButtonColor(button: ButtonIn, color: number[]): void {
+  setButtonColor(button: ButtonIn, color: RgbColor): void {
     if (!Array.isArray(color) || color.length !== 3) {
       throw new Error('Invalid color settings supplied');
     }
 
     // make sure the launchpad understands the colors we provide
-    if (color.some(value => value > 63 || value < 0)) {
-      throw new Error('RGB color is invalid, please make sure the color values are in range 0-63 (Hint: you can use colors.colorFromRGB as a helper for that');
+    if (color.some(value => value > 1 || value < 0)) {
+      throw new Error(`RGB color is invalid, please make sure the color values are between 0 and 1, got ${color} (Hint: you can use colors.colorFromRGB as a helper for that`);
     }
 
-    const [r, g, b] = color;
+    const [r, g, b] = color.map(v => Math.round(v * 63));
     const buttonMapped = this.mapButtonFromXy(button);
 
     this.sendSysEx(11, buttonMapped, r, g, b);
@@ -54,7 +54,7 @@ export class LaunchpadMK2 extends BaseLaunchpad {
   flash(button: ButtonIn, color: number): void {
     const buttonMapped = this.mapButtonFromXy(button);
 
-    this.sendSysEx(35, 0, buttonMapped, minMaxColor(color));
+    this.sendSysEx(35, 0, buttonMapped, restrictToPalette(color));
   }
 
   /**
@@ -63,7 +63,7 @@ export class LaunchpadMK2 extends BaseLaunchpad {
   pulse(button: ButtonIn, color: number): void {
     const buttonMapped = this.mapButtonFromXy(button);
 
-    this.sendSysEx(40, 0, buttonMapped, minMaxColor(color));
+    this.sendSysEx(40, 0, buttonMapped, restrictToPalette(color));
   }
 
   /**

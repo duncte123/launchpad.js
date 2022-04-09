@@ -24,7 +24,7 @@ export interface ILaunchpad extends EventEmitter<EventTypes> {
    *
    * @abstract
    */
-  setButtonColor(button: ButtonIn, color: [number, number, number]): void;
+  setButtonColor(button: ButtonIn, color: RgbColor): void;
 
   /**
    * Tells the launchpad to start flashing a button between the current color and {@param color}<br>
@@ -101,6 +101,11 @@ export interface Button {
  * struct.
  */
 export type ButtonIn = number | [number, number] | Button;
+
+/**
+ * A color specified by R, G and B components between 0..1
+ */
+export type RgbColor = [number, number, number];
 
 export function isButton(x: ButtonIn): x is Button {
   return x != null && typeof x === 'object' && 'nr' in x;

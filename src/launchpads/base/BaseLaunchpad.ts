@@ -1,7 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import midi from 'midi';
 import { findDevice, onExit } from '../../utils';
-import { Button, ButtonIn, EventTypes, ILaunchpad } from './ILaunchpad';
+import { Button, ButtonIn, EventTypes, ILaunchpad, RgbColor } from './ILaunchpad';
 
 export interface BaseLaunchpadOptions {
 
@@ -43,7 +43,7 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
   /**
    * @inheritDoc
    */
-  public abstract setButtonColor(button: ButtonIn, color: number[]): void;
+  public abstract setButtonColor(button: ButtonIn, color: RgbColor): void;
 
   /**
    * @inheritDoc
