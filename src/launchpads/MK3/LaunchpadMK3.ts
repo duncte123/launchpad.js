@@ -80,7 +80,7 @@ export class LaunchpadMK3 extends BaseLaunchpad {
    * @inheritDoc
    */
   allOff(): void {
-    // Does not exist on MK3 (yet). Upcoming in branch.
+    this.sendSysEx(14, 0);
   }
 
   /**
