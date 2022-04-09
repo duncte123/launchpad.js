@@ -171,4 +171,5 @@ export type Style =
   | { readonly style: 'palette'; readonly color: number }
   | { readonly style: 'flash'; readonly color: number, readonly colorB?: number }
   | { readonly style: 'pulse'; readonly color: number }
-  | { readonly style: 'rgb'; readonly rgb: RgbColor };
+  | { readonly style: 'rgb'; readonly rgb: RgbColor }
+  | { readonly style: 'off' };

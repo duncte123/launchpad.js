@@ -1,5 +1,5 @@
 import convert from 'color-convert';
-import { RgbColor } from './launchpads/base/ILaunchpad';
+import { RgbColor } from './launchpads/base/ILaunchpad.js';
 
 export const defaultColors: Record<string, RgbColor> = {
   off: [0, 0, 0],

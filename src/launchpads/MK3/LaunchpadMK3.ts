@@ -1,7 +1,8 @@
-import { BaseLaunchpad, BaseLaunchpadOptions, isRgbColor, validatePaletteColor, validateRgbColor } from '../base/BaseLaunchpad';
-import { Button, ButtonIn, ButtonStyle, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad';
-import { ButtonColor } from './ButtonColor';
-import { SysEx } from './SysEx';
+import { range } from '../../utils.js';
+import { BaseLaunchpad, BaseLaunchpadOptions, isRgbColor, validatePaletteColor, validateRgbColor } from '../base/BaseLaunchpad.js';
+import { Button, ButtonIn, ButtonStyle, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad.js';
+import { ButtonColor } from './ButtonColor.js';
+import { SysEx } from './SysEx.js';
 
 export type LaunchpadMK3Options = BaseLaunchpadOptions;
 
@@ -90,6 +91,8 @@ export class LaunchpadMK3 extends BaseLaunchpad {
       switch (b.style.style) {
       case 'palette':
         return ButtonColor.staticColor(button, validatePaletteColor(b.style.color));
+      case 'off':
+        return ButtonColor.staticColor(button, 0);
       case 'rgb':
         return ButtonColor.rgb(button, ...scaleRgbMk3(b.style.rgb));
       case 'flash':
@@ -110,7 +113,11 @@ export class LaunchpadMK3 extends BaseLaunchpad {
    * @inheritDoc
    */
   allOff(): void {
-    this.sendSysEx(14, 0);
+    this.setButtons(...range(9).flatMap(y => range(9).map(x => ({
+      button: [x, y],
+      // eslint-disable-next-line object-property-newline
+      style: { style: 'palette', color: 0 },
+    } as ButtonStyle))));
   }
 
   /**

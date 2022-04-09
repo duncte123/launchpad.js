@@ -62,3 +62,10 @@ export function range(n: number): number[] {
   }
   return ret;
 }
+
+/**
+ * Return all (x, y) coordinates
+ */
+export function allXy(width: number, height: number): Array<[number, number]> {
+  return range(height).flatMap(y => range(width).map(x => [x, y] as [number, number]));
+}

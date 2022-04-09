@@ -1,7 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import midi from 'midi';
-import { findDevice, onExit } from '../../utils';
-import { Button, ButtonIn, ButtonStyle, EventTypes, ILaunchpad, PaletteColor, RgbColor, Style } from './ILaunchpad';
+import { findDevice, onExit } from '../../utils.js';
+import { Button, ButtonIn, ButtonStyle, EventTypes, ILaunchpad, PaletteColor, RgbColor, Style } from './ILaunchpad.js';
 
 export interface BaseLaunchpadOptions {
 
@@ -222,6 +222,7 @@ export function groupByStyle(styles: ButtonStyle[]): GroupedStyles {
     palette: [],
     pulse: [],
     rgb: [],
+    off: [],
   };
   for (const obj of styles) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any,no-extra-parens
@@ -240,4 +241,5 @@ export interface GroupedStyles {
   readonly rgb: Array<ButtonWithStyle<'rgb'>>;
   readonly flash: Array<ButtonWithStyle<'flash'>>;
   readonly pulse: Array<ButtonWithStyle<'pulse'>>;
+  readonly off: Array<ButtonWithStyle<'off'>>;
 }

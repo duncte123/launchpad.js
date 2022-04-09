@@ -1,6 +1,6 @@
-import { CONTROL_NOTE, NORMAL_NOTE } from '../../utils';
-import { BaseLaunchpad, BaseLaunchpadOptions, groupByStyle, isRgbColor, validatePaletteColor, validateRgbColor } from '../base/BaseLaunchpad';
-import { Button, ButtonIn, ButtonStyle, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad';
+import { CONTROL_NOTE, NORMAL_NOTE } from '../../utils.js';
+import { BaseLaunchpad, BaseLaunchpadOptions, groupByStyle, isRgbColor, validatePaletteColor, validateRgbColor } from '../base/BaseLaunchpad.js';
+import { Button, ButtonIn, ButtonStyle, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad.js';
 
 export type LaunchpadMK2Options = BaseLaunchpadOptions;
 
@@ -70,6 +70,16 @@ export class LaunchpadMK2 extends BaseLaunchpad {
     // For the MK2, we can set multiple buttons at once per style command, so
     // we first need to group by style.
     const groups = groupByStyle(buttons);
+
+    // Combine 'off' and 'palette', since 'off' is just an alias for palette 0
+    groups.palette.push(...groups.off.map(s => ({
+      button: s.button,
+      style: {
+        style: 'palette',
+        color: 0
+      } as const,
+    })));
+
     if (groups.palette.length > 0) {
       this.sendSysEx(10, ...groups.palette.flatMap(s => [
         this.mapButtonFromXy(s.button),
