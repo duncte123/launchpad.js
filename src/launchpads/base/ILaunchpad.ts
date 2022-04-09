@@ -67,10 +67,10 @@ export interface ILaunchpad extends EventEmitter<EventTypes> {
 }
 
 export interface EventTypes {
-  ready: (deviceName: string) => void,
-  'rawMessage': (message: number[]) => void,
-  'buttonDown': (button: Button) => void,
-  'buttonUp': (button: Button) => void,
+  ready: (deviceName: string) => void;
+  rawMessage: (message: number[]) => void;
+  buttonDown: (button: Button) => void;
+  buttonUp: (button: Button) => void;
  }
 
  /**
