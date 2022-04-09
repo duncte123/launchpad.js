@@ -1,6 +1,5 @@
-import { restrictToPalette } from '../../colorHelpers';
-import { BaseLaunchpad, BaseLaunchpadOptions } from '../base/BaseLaunchpad';
-import { Button, ButtonIn, isButton, RgbColor } from '../base/ILaunchpad';
+import { BaseLaunchpad, BaseLaunchpadOptions, isRgbColor, validatePaletteColor, validateRgbColor } from '../base/BaseLaunchpad';
+import { Button, ButtonIn, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad';
 import { ButtonColor } from './ButtonColor';
 import { SysEx } from './SysEx';
 
@@ -37,21 +36,21 @@ export class LaunchpadMK3 extends BaseLaunchpad {
   /**
    * @inheritDoc
    */
-  setButtonColor(button: ButtonIn, color: RgbColor): void {
-    if (!Array.isArray(color) || color.length !== 3) {
+  setButtonColor(button: ButtonIn, color: RgbColor  | PaletteColor): void {
+    if (typeof color !== 'number' && (!Array.isArray(color) || color.length !== 3)) {
       throw new Error('Invalid color settings supplied');
     }
 
-    // make sure the launchpad understands the colors we provide
-    if (color.some(value => value > 1 || value < 0)) {
-      throw new Error(`RGB color is invalid, please make sure the color values are between 0 and 1, got ${color} (Hint: you can use colors.colorFromRGB as a helper for that`);
-    }
-
-    const [r, g, b] = color.map(v => Math.round(v * 127));
     const buttonMapped = this.mapButtonFromXy(button);
 
-    this.sendSysEx(...SysEx.setButtonColors(ButtonColor.rgb(
-      buttonMapped, r, g, b)));
+    if (isRgbColor(color)) {
+      const [r, g, b] = validateRgbColor(color).map(v => Math.round(v * 127));
+      this.sendSysEx(...SysEx.setButtonColors(ButtonColor.rgb(
+        buttonMapped, r, g, b)));
+    } else {
+      this.sendSysEx(...SysEx.setButtonColors(ButtonColor.staticColor(
+        buttonMapped, validatePaletteColor(color))));
+    }
   }
 
   /**
@@ -62,8 +61,8 @@ export class LaunchpadMK3 extends BaseLaunchpad {
 
     this.sendSysEx(...SysEx.setButtonColors(
       ButtonColor.flash(buttonMapped,
-        restrictToPalette(color),
-        restrictToPalette(colorB))));
+        validatePaletteColor(color),
+        validatePaletteColor(colorB))));
   }
 
   /**
@@ -74,7 +73,7 @@ export class LaunchpadMK3 extends BaseLaunchpad {
 
     this.sendSysEx(...SysEx.setButtonColors(
       ButtonColor.pulse(buttonMapped,
-        restrictToPalette(color))));
+        validatePaletteColor(color))));
   }
 
   /**

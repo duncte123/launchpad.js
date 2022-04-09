@@ -10,13 +10,6 @@ export const defaultColors: Record<string, RgbColor> = {
 };
 
 /**
- * Make sure a color is a valid color in the palette
- */
-export function restrictToPalette(color: number): number {
-  return Math.max(color % PALETTE_SIZE, 0);
-}
-
-/**
  * How many Palette colors there are
  */
 export const PALETTE_SIZE = 64;

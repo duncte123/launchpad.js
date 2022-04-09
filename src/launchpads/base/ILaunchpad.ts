@@ -16,25 +16,34 @@ import EventEmitter from 'eventemitter3';
 /* eslint-disable no-unused-vars */
 export interface ILaunchpad extends EventEmitter<EventTypes> {
   /**
-   * Sets the color for a button on the Launchpad <br>
-   * The button is an array of x and y when xyMode is turned on
+   * Sets the color for a button on the Launchpad
    *
-   * @param {number|number[]} button The grid button to set the color for
-   * @param {Array<number>} color the color to set for the button, the array is an RGB array
+   * The button can be specified as a button number (launchpad specific), an [x, y]
+   * value, or a Button object.
+   *
+   * The color can be either an index into the 64-color palette, or an RGB-triple
+   * between 0 and 1.
+   *
+   * @param {number|number[]|Button} button The grid button to set the color for
+   * @param {number|number[]} color the color to set for the button, either a palette color or an RGB array.
    *
    * @abstract
    */
-  setButtonColor(button: ButtonIn, color: RgbColor): void;
+  setButtonColor(button: ButtonIn, color: RgbColor | PaletteColor): void;
 
   /**
    * Tells the launchpad to start flashing a button between the current color and {@param color}<br>
    *   <b>IMPORTANT:</b> flashing and pulsing only works for buttons that are on the grid <br>
-   * The button is an array of x and y when xyMode is turned on
+   *
+   * The button can be specified as a button number (launchpad specific), an [x, y]
+   * value, or a Button object.
+   *
+   * The colors are an index into the 64-color palette.
    *
    * Not all Launchpads support a second color. For those, the
    * second color is ignored.
    *
-   * @param {number|number[]} button The grid button to start flashing
+   * @param {number|number[]|Button} button The grid button to start flashing
    * @param {number} color A color from the primary color chart, result to your launchpad's programming manual for more info
    * @param {number} color2 A color from the primary color chart, result to your launchpad's programming manual for more info.
    *
@@ -47,9 +56,13 @@ export interface ILaunchpad extends EventEmitter<EventTypes> {
   /**
    * Tells the launchpad to start pulsing a button between the current color and {@param color}<br>
    *   <b>IMPORTANT:</b> flashing and pulsing only works for buttons that are on the grid <br>
-   * The button is an array of x and y when xyMode is turned on
    *
-   * @param {number|number[]} button The grid button to start flashing
+   * The button can be specified as a button number (launchpad specific), an [x, y]
+   * value, or a Button object.
+   *
+   * The color is an index into the 64-color palette.
+   *
+   * @param {number|number[]|Button} button The grid button to start flashing
    * @param {number} color A color from the primary color chart, result to your launchpad's programming manual for more info
    *
    * @throws {Error} if the color is out of the launchpad's range
@@ -106,6 +119,13 @@ export type ButtonIn = number | [number, number] | Button;
  * A color specified by R, G and B components between 0..1
  */
 export type RgbColor = [number, number, number];
+
+/**
+ * A color specified by an index into the Launchpad 64-color palette
+ *
+ * Values must be 0..63.
+ */
+export type PaletteColor = number;
 
 export function isButton(x: ButtonIn): x is Button {
   return x != null && typeof x === 'object' && 'nr' in x;

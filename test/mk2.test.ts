@@ -24,6 +24,18 @@ describe('SysEx messages', () => {
       247]);
   });
 
+  test('setButtonColor sends the right SysEx message given a palette color', () => {
+    // WHEN
+    lp.setButtonColor(55, 24);
+
+    // THEN
+    expect(mockedOutput.sendMessage).toHaveBeenCalledWith([...HEADER,
+      10, // setpalette
+      55,
+      24,
+      247]);
+  });
+
   test('flash sends the right SysEx message given a button number', () => {
     // WHEN
     lp.flash(55, 42);

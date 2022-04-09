@@ -1,7 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import midi from 'midi';
 import { findDevice, onExit } from '../../utils';
-import { Button, ButtonIn, EventTypes, ILaunchpad, RgbColor } from './ILaunchpad';
+import { Button, ButtonIn, EventTypes, ILaunchpad, PaletteColor, RgbColor } from './ILaunchpad';
 
 export interface BaseLaunchpadOptions {
 
@@ -43,7 +43,7 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
   /**
    * @inheritDoc
    */
-  public abstract setButtonColor(button: ButtonIn, color: RgbColor): void;
+  public abstract setButtonColor(button: ButtonIn, color: RgbColor | PaletteColor): void;
 
   /**
    * @inheritDoc
@@ -175,4 +175,29 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
    * Determine the button number from any of the possible ways to specify a button
    */
   public abstract mapButtonFromXy(xy: ButtonIn): number;
+}
+
+
+/**
+ * Make sure a color is a valid color in the palette
+ */
+export function validatePaletteColor(color: PaletteColor): PaletteColor {
+  if (color < 0 || color > 63 || Math.floor(color) !== color) {
+    throw new Error(`Not a valid palette color: ${color} (must be an int between 0..63)`);
+  }
+  return color;
+}
+
+/**
+ * Make sure a color is a valid RGB color
+ */
+export function validateRgbColor(color: RgbColor): RgbColor {
+  if (color.some(value => value > 1 || value < 0)) {
+    throw new Error(`RGB color is invalid: ${color}, values must be between 0..1. (use colors.colorFromRGB as a helper)`);
+  }
+  return color;
+}
+
+export function isRgbColor(color: PaletteColor | RgbColor): color is RgbColor {
+  return Array.isArray(color);
 }
