@@ -1,6 +1,6 @@
 import { CONTROL_NOTE, NORMAL_NOTE } from '../../utils.js';
-import { BaseLaunchpad, BaseLaunchpadOptions, groupByStyle, isRgbColor, validatePaletteColor, validateRgbColor } from '../base/BaseLaunchpad.js';
-import { Button, ButtonIn, ButtonStyle, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad.js';
+import { BaseLaunchpad, BaseLaunchpadOptions, isRgbColor, validatePaletteColor, validateRgbColor } from '../base/BaseLaunchpad.js';
+import { Button, ButtonIn, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad.js';
 
 export type LaunchpadMK2Options = BaseLaunchpadOptions;
 

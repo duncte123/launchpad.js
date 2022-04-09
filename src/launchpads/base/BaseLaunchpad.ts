@@ -1,7 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import midi from 'midi';
 import { findDevice, onExit } from '../../utils.js';
-import { Button, ButtonIn, ButtonStyle, EventTypes, ILaunchpad, PaletteColor, RgbColor, Style } from './ILaunchpad.js';
+import { Button, ButtonIn, EventTypes, ILaunchpad, PaletteColor, RgbColor } from './ILaunchpad.js';
 
 export interface BaseLaunchpadOptions {
 

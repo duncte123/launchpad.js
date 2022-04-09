@@ -1,6 +1,5 @@
-import { range } from '../../utils.js';
 import { BaseLaunchpad, BaseLaunchpadOptions, isRgbColor, validatePaletteColor, validateRgbColor } from '../base/BaseLaunchpad.js';
-import { Button, ButtonIn, ButtonStyle, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad.js';
+import { Button, ButtonIn, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad.js';
 import { ButtonColor } from './ButtonColor.js';
 import { SysEx } from './SysEx.js';
 
@@ -81,11 +80,7 @@ export class LaunchpadMK3 extends BaseLaunchpad {
    * @inheritDoc
    */
   allOff(): void {
-    this.setButtons(...range(9).flatMap(y => range(9).map(x => ({
-      button: [x, y],
-      // eslint-disable-next-line object-property-newline
-      style: { style: 'palette', color: 0 },
-    } as ButtonStyle))));
+    // Does not exist on MK3 (yet). Upcoming in branch.
   }
 
   /**
