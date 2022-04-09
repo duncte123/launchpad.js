@@ -1,3 +1,4 @@
+/* eslint-disable object-property-newline */
 /* eslint-disable init-declarations */
 /* eslint-disable max-lines-per-function */
 /* eslint-disable no-promise-executor-return */
@@ -9,6 +10,10 @@ beforeEach(async () => {
   givenMidiDevices(['Launchpad MK2']);
   lp = await waitForReady(new LaunchpadMK2());
   jest.clearAllMocks();
+});
+
+afterEach(() => {
+  lp.close();
 });
 
 

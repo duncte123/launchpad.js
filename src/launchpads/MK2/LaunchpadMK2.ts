@@ -1,6 +1,6 @@
-import { CONTROL_NOTE, NORMAL_NOTE } from '../../utils';
-import { BaseLaunchpad, BaseLaunchpadOptions, isRgbColor, validatePaletteColor, validateRgbColor } from '../base/BaseLaunchpad';
-import { Button, ButtonIn, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad';
+import { CONTROL_NOTE, NORMAL_NOTE } from '../../utils.js';
+import { BaseLaunchpad, BaseLaunchpadOptions, groupByStyle, isRgbColor, validatePaletteColor, validateRgbColor } from '../base/BaseLaunchpad.js';
+import { Button, ButtonIn, ButtonStyle, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad.js';
 
 export type LaunchpadMK2Options = BaseLaunchpadOptions;
 
@@ -39,8 +39,7 @@ export class LaunchpadMK2 extends BaseLaunchpad {
     const buttonMapped = this.mapButtonFromXy(button);
 
     if (isRgbColor(color)) {
-      const [r, g, b] = validateRgbColor(color).map(v => Math.round(v * 63));
-      this.sendSysEx(11, buttonMapped, r, g, b);
+      this.sendSysEx(11, buttonMapped, ...scaleRgbMk2(color));
     } else {
       this.sendSysEx(10, buttonMapped, validatePaletteColor(color));
     }
@@ -125,4 +124,8 @@ export class LaunchpadMK2 extends BaseLaunchpad {
     // eslint-disable-next-line no-extra-parens
     return 91 - (10 * y) + x;
   }
+}
+
+function scaleRgbMk2(color: RgbColor): RgbColor {
+  return validateRgbColor(color).map(v => Math.round(v * 63)) as RgbColor;
 }

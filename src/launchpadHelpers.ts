@@ -1,4 +1,4 @@
-import { ILaunchpad } from './launchpads/base/ILaunchpad';
+import { ILaunchpad } from './launchpads/base/ILaunchpad.js';
 
 /**
  * Return a promise waiting for the given Launchpad to become ready

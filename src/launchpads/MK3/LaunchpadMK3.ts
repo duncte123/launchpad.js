@@ -1,7 +1,8 @@
-import { BaseLaunchpad, BaseLaunchpadOptions, isRgbColor, validatePaletteColor, validateRgbColor } from '../base/BaseLaunchpad';
-import { Button, ButtonIn, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad';
-import { ButtonColor } from './ButtonColor';
-import { SysEx } from './SysEx';
+import { range } from '../../utils.js';
+import { BaseLaunchpad, BaseLaunchpadOptions, isRgbColor, validatePaletteColor, validateRgbColor } from '../base/BaseLaunchpad.js';
+import { Button, ButtonIn, ButtonStyle, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad.js';
+import { ButtonColor } from './ButtonColor.js';
+import { SysEx } from './SysEx.js';
 
 export type LaunchpadMK3Options = BaseLaunchpadOptions;
 
@@ -44,7 +45,7 @@ export class LaunchpadMK3 extends BaseLaunchpad {
     const buttonMapped = this.mapButtonFromXy(button);
 
     if (isRgbColor(color)) {
-      const [r, g, b] = validateRgbColor(color).map(v => Math.round(v * 127));
+      const [r, g, b] = scaleRgbMk3(color);
       this.sendSysEx(...SysEx.setButtonColors(ButtonColor.rgb(buttonMapped, r, g, b)));
     } else {
       this.sendSysEx(...SysEx.setButtonColors(ButtonColor.staticColor(buttonMapped, validatePaletteColor(color))));
@@ -80,7 +81,11 @@ export class LaunchpadMK3 extends BaseLaunchpad {
    * @inheritDoc
    */
   allOff(): void {
-    this.sendSysEx(14, 0);
+    this.setButtons(...range(9).flatMap(y => range(9).map(x => ({
+      button: [x, y],
+      // eslint-disable-next-line object-property-newline
+      style: { style: 'palette', color: 0 },
+    } as ButtonStyle))));
   }
 
   /**
@@ -111,4 +116,8 @@ export class LaunchpadMK3 extends BaseLaunchpad {
     const [x, y] = xy;
     return (9 - y) * 10 + x + 1;
   }
+}
+
+function scaleRgbMk3(color: RgbColor): RgbColor {
+  return validateRgbColor(color).map(v => Math.round(v * 127)) as RgbColor;
 }

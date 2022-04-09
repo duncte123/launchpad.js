@@ -1,7 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import midi from 'midi';
-import { findDevice, onExit } from '../../utils';
-import { Button, ButtonIn, EventTypes, ILaunchpad, PaletteColor, RgbColor } from './ILaunchpad';
+import { findDevice, onExit } from '../../utils.js';
+import { Button, ButtonIn, ButtonStyle, EventTypes, ILaunchpad, PaletteColor, RgbColor, Style } from './ILaunchpad.js';
 
 export interface BaseLaunchpadOptions {
 
@@ -35,6 +35,7 @@ export interface BaseLaunchpadOptions {
 export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements ILaunchpad {
   protected readonly input = new midi.Input();
   protected readonly output = new midi.Output();
+  protected open = false;
 
   constructor(protected readonly options: BaseLaunchpadOptions = {}) {
     super();
@@ -109,10 +110,12 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
       findDevice(deviceName, this.output),
     ];
 
-    onExit(() => this.closePorts());
+    onExit(() => this.close());
 
     this.output.openPort(outputPort);
     this.input.openPort(inputPort);
+
+    this.open = true;
 
     process.nextTick(() => {
       this.emit('ready', this.input.getPortName(inputPort));
@@ -146,12 +149,18 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
   /**
    * Closes the connection with the launchpad
    */
-  protected closePorts(): void {
+  public close(): void {
+    if (!this.open) {
+      return;
+    }
+
     this.logDebug('Closing ports');
 
     this.allOff();
     this.input.closePort();
     this.output.closePort();
+    this.input.removeAllListeners('message');
+    this.open = false;
   }
 
   /**

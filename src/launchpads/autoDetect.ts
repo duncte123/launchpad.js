@@ -1,8 +1,8 @@
 import midi from 'midi';
-import { allDeviceNames } from '../utils';
-import { ILaunchpad } from './base/ILaunchpad';
-import { LaunchpadMK2 } from './MK2/LaunchpadMK2';
-import { LaunchpadMK3 } from './MK3/LaunchpadMK3';
+import { allDeviceNames } from '../utils.js';
+import { ILaunchpad } from './base/ILaunchpad.js';
+import { LaunchpadMK2 } from './MK2/LaunchpadMK2.js';
+import { LaunchpadMK3 } from './MK3/LaunchpadMK3.js';
 
 export interface AutoDetectOptions {
 

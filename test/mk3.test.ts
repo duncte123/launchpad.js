@@ -11,6 +11,9 @@ beforeEach(async () => {
   jest.clearAllMocks();
 });
 
+afterEach(() => {
+  lp.close();
+});
 
 const HEADER = [240, 0, 32, 41, 2, 13]; // Different from MK2!
 

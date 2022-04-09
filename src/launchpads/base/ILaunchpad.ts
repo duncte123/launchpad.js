@@ -78,6 +78,14 @@ export interface ILaunchpad extends EventEmitter<EventTypes> {
    * @abstract
    */
   allOff(): void;
+
+  /**
+   * Close the connection to the MIDI device
+   *
+   * This will automatically be called when your process exits. You probably
+   * don't need to call this.
+   */
+  close(): void;
 }
 
 export interface EventTypes {
