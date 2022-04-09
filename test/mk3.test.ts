@@ -1,15 +1,15 @@
 import { givenMidiDevices, mockedInput, mockedOutput } from './mocking-midi';
-import { Button, colors, LaunchpadMK2, waitForReady } from '../src';
+import { Button, colors, LaunchpadMK3, waitForReady } from '../src';
 
-let lp: LaunchpadMK2;
+let lp: LaunchpadMK3;
 beforeEach(async () => {
-  givenMidiDevices(['Launchpad MK2']);
-  lp = await waitForReady(new LaunchpadMK2());
+  givenMidiDevices(['Launchpad MK3 MIDI']);
+  lp = await waitForReady(new LaunchpadMK3());
   jest.clearAllMocks();
 });
 
 
-const HEADER = [240, 0, 32, 41, 2, 24];
+const HEADER = [240, 0, 32, 41, 2, 13]; // Different from MK2!
 
 describe('SysEx messages', () => {
   test('setButtonColor sends the right SysEx message given a button number', () => {
@@ -18,9 +18,10 @@ describe('SysEx messages', () => {
 
     // THEN
     expect(mockedOutput.sendMessage).toHaveBeenCalledWith([...HEADER,
-      11, // setrgb
+      3, // led
+      3, // rgb
       55,
-      63, 0, 0,
+      127, 0, 0,
       247]);
   });
 
@@ -30,9 +31,25 @@ describe('SysEx messages', () => {
 
     // THEN
     expect(mockedOutput.sendMessage).toHaveBeenCalledWith([...HEADER,
-      35, 0, // flash
+      3, // led
+      1, // flash
       55,
-      42,
+      0, // colorB
+      42, // colorA
+      247]);
+  });
+
+  test('flash supports 2 colors', () => {
+    // WHEN
+    lp.flash(55, 42, 1);
+
+    // THEN
+    expect(mockedOutput.sendMessage).toHaveBeenCalledWith([...HEADER,
+      3, // led
+      1, // flash
+      55,
+      1, // colorB
+      42, // colorA
       247]);
   });
 
@@ -42,7 +59,8 @@ describe('SysEx messages', () => {
 
     // THEN
     expect(mockedOutput.sendMessage).toHaveBeenCalledWith([...HEADER,
-      40, 0, // pulse
+      3, // led
+      2, // pulse
       55,
       42,
       247]);
@@ -56,9 +74,10 @@ describe('x/y mapping', () => {
 
     // THEN
     expect(mockedOutput.sendMessage).toHaveBeenCalledWith([...HEADER,
-      11, // setrgb
+      3, // led
+      3, // rgb
       64, // 0-base (3, 3) from the top-left is 1-base (6, 4) from bottom-left
-      63, 0, 0,
+      127, 0, 0,
       247]);
   });
 
@@ -68,9 +87,10 @@ describe('x/y mapping', () => {
 
     // THEN
     expect(mockedOutput.sendMessage).toHaveBeenCalledWith([...HEADER,
-      11, // setrgb
-      107, // top row is addressed starting at 104, for some reason
-      63, 0, 0,
+      3, // led
+      3, // rgb
+      94, // 0-base (3, 0) from the top-left is 1-base (9, 4) from bottom left
+      127, 0, 0, // rgb
       247]);
   });
 });
@@ -94,12 +114,12 @@ describe('events', () => {
     const buttonDown = new Promise<Button>(ok => lp.once('buttonDown', ok));
     mockedInput.emit('message', 0, [
       176, // Control note
-      107, // Nr
+      94, // Nr
       1]); // Down
     const button = await buttonDown;
 
     expect(button).toEqual({
-      nr: 107,
+      nr: 94,
       xy: [3, 0],
     });
   });
