@@ -24,7 +24,7 @@ export class Layer implements ILayer {
     let xy: [number, number];
     let theStyle: Style;
 
-    if (arguments.length === 2) {
+    if (Array.isArray(xOrXy)) {
       xy = validateXy(xOrXy);
       if (typeof yOrStyle === 'number') {
         throw new Error(`Expected Style object as second argument, got: ${JSON.stringify(yOrStyle)}`);
@@ -32,7 +32,7 @@ export class Layer implements ILayer {
       theStyle = yOrStyle;
     } else {
       if (typeof xOrXy !== 'number' || typeof yOrStyle !== 'number') {
-        throw new Error(`Expected first two arguments to be numbers, got: ${xOrXy},${yOrStyle}`);
+        throw new Error(`Expected only two arguments to be numbers, got: ${xOrXy},${yOrStyle}`);
       }
       if (!style) {
         throw new Error('Expected Style object as third argument');
@@ -56,7 +56,7 @@ export class Layer implements ILayer {
   get(xOrXy: number | [number, number], maybeY?: number): Style {
     let xy: [number, number];
 
-    if (arguments.length === 1) {
+    if (Array.isArray(xOrXy)) {
       xy = validateXy(xOrXy);
     } else {
       if (typeof xOrXy !== 'number' || typeof maybeY !== 'number') {

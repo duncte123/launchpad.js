@@ -25,6 +25,14 @@ beforeEach(() => {
   surface = new Surface(launchPad);
 });
 
+test('can read what we\'ve written', () => {
+  surface.set(0, 0, { style: 'palette', color: 42 });
+  surface.set([1, 0], { style: 'palette', color: 42 });
+
+  expect(surface.get([0, 0])).toEqual({ style: 'palette', color: 42 });
+  expect(surface.get(1, 0)).toEqual({ style: 'palette', color: 42 });
+});
+
 test('button commands are sent when update() is called', () => {
   surface.set(0, 0, { style: 'palette', color: 42 });
   expect(launchPad.setButtons).not.toHaveBeenCalled();
