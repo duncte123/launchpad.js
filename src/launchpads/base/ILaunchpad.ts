@@ -22,7 +22,7 @@ export interface ILaunchpad extends EventEmitter<EventTypes> {
    * The button can be specified as a button number (launchpad specific), an [x, y]
    * value, or a Button object.
    *
-   * The color can be either an index into the 64-color palette, or an RGB-triple
+   * The color can be either an index into the 128-color palette, or an RGB-triple
    * between 0 and 1.
    *
    * @param {number|number[]|Button} button The grid button to set the color for
@@ -39,7 +39,7 @@ export interface ILaunchpad extends EventEmitter<EventTypes> {
    * The button can be specified as a button number (launchpad specific), an [x, y]
    * value, or a Button object.
    *
-   * The colors are an index into the 64-color palette.
+   * The colors are an index into the 128-color palette.
    *
    * Not all Launchpads support a second color. For those, the
    * second color is ignored.
@@ -61,7 +61,7 @@ export interface ILaunchpad extends EventEmitter<EventTypes> {
    * The button can be specified as a button number (launchpad specific), an [x, y]
    * value, or a Button object.
    *
-   * The color is an index into the 64-color palette.
+   * The color is an index into the 128-color palette.
    *
    * @param {number|number[]|Button} button The grid button to start flashing
    * @param {number} color A color from the primary color chart, result to your launchpad's programming manual for more info
@@ -144,9 +144,9 @@ export type ButtonIn = number | [number, number] | Button;
 export type RgbColor = [number, number, number];
 
 /**
- * A color specified by an index into the Launchpad 64-color palette
+ * A color specified by an index into the Launchpad 128-color palette
  *
- * Values must be 0..63.
+ * Values must be 0..127.
  */
 export type PaletteColor = number;
 
