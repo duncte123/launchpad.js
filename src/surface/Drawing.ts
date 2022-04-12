@@ -14,8 +14,13 @@ export class Drawing {
   /**
    * Draw a bitmap on the layer at the given coordinates
    *
-   * The bitmap is specified as a list of strings. Characters in
-   * the list of strings can be mapped to button styles.
+   * The bitmap is specified as a list of strings. Every line is drawn on a new
+   * row, starting a given (x, y) coordinate pair.  Characters in the list of
+   * strings can be mapped to button styles.
+   *
+   * @param {number[]} xy The coordinate of the top-left button
+   * @param {string[]} lines Sequence of button colors to draw, every string is drawn on a new row with colors from the styleMap parameter
+   * @param {Record<string, Style>} styleMap Map of characters to button styles
    */
   public bitmap(xy: [number, number], lines: string[], styleMap: Record<string, Style>): void {
     for (let j = 0; j < lines.length; j++) {
@@ -31,6 +36,8 @@ export class Drawing {
 
   /**
    * Move all buttons on this layer by the given amount
+   *
+   * @param {number[]} delta Shift all colors by the given (x, y) amount
    */
   public shift(delta: [number, number]): void {
     const newStyles: { xy: [number, number], style: Style }[] = allXy(this.layer.width, this.layer.height).map(xy => ({
@@ -44,6 +51,10 @@ export class Drawing {
 
   /**
    * Draw a rectangle at the given location
+   *
+   * @param {number[]} xy The (x, y) coordinates of the top-left corner of the rectangle
+   * @param {number[]} wh The width anad height of the rectangle. Cannot be negative.
+   * @param {Style} style The button style to paint all buttons in the rectangle
    */
   public rect(xy: [number, number], wh: [number, number], style: Style): void {
     for (let y = 0; y < wh[1]; y++) {

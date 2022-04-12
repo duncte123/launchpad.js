@@ -25,7 +25,15 @@ import { Layer } from './Layer.js';
  * at a given time.
  */
 export class Surface implements ILayer {
+
+  /**
+   * The width of the layer
+   */
   public readonly width = 9;
+
+  /**
+   * The height of the layer
+   */
   public readonly height = 9;
 
   private currentDisplay = new Layer(this.width, this.height);
@@ -45,6 +53,8 @@ export class Surface implements ILayer {
    * Create or return the layer at the given index.
    *
    * Layer number must be a natural number.
+   *
+   * @param {number} i The layer number to access
    */
   public layer(i: number): Layer {
     if (i < 0 || Math.floor(i) !== i) {
@@ -62,6 +72,8 @@ export class Surface implements ILayer {
    * Remove a layer with the given number
    *
    * Layer 0 cannot be removed.
+   *
+   * @param {number} i The layer number to remove
    */
   public removeLayer(i: number): void {
     if (i < 0 || Math.floor(i) !== i) {
@@ -95,6 +107,14 @@ export class Surface implements ILayer {
     this.currentDisplay = newDisplay;
   }
 
+  /**
+   * Set the style (color) of a single button
+   *
+   * @param {number} x The x coordinate
+   * @param {number} y The y coordinate
+   * @param {number[]} xy The x and y coordinates
+   * @param {Style} style The style of the button
+   */
   set(x: number, y: number, style: Style): void;
   set(xy: [number, number], style: Style): void;
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -102,6 +122,14 @@ export class Surface implements ILayer {
     this.layer0.set(x, y, style);
   }
 
+  /**
+   * Return the style (color) of a single button
+   *
+   * @param {number} x The x coordinate
+   * @param {number} y The y coordinate
+   * @param {number[]} xy The x and y coordinates
+   * @returns {Style} The style of the button
+   */
   get(x: number, y: number): Style;
   get(xy: [number, number]): Style;
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -109,6 +137,9 @@ export class Surface implements ILayer {
     return this.layer0.get(x, y);
   }
 
+  /**
+   * Set all buttons to off (or transparent)
+   */
   allOff(): void {
     this.layer0.allOff();
   }
