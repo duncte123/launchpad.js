@@ -16,7 +16,7 @@ lp.once('ready', (name) => {
   ], {
     'x': { style: 'palette', color: 13 }, // yellow
     'o': { style: 'palette', color: 50 }, // purple
-    '-': { style: 'pulse', color: 13 }, // purple
+    '-': { style: 'pulse', color: 13 }, // yellow
   });
 
   surface.update();
