@@ -1,5 +1,6 @@
+import { range } from '../../utils.js';
 import { BaseLaunchpad, BaseLaunchpadOptions, isRgbColor, validatePaletteColor, validateRgbColor } from '../base/BaseLaunchpad.js';
-import { Button, ButtonIn, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad.js';
+import { Button, ButtonIn, ButtonStyle, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad.js';
 import { ButtonColor } from './ButtonColor.js';
 import { SysEx } from './SysEx.js';
 
@@ -79,8 +80,44 @@ export class LaunchpadMK3 extends BaseLaunchpad {
   /**
    * @inheritDoc
    */
+  public setButtons(...buttons: ButtonStyle[]): void {
+    if (buttons.length === 0) {
+      return;
+    }
+
+    this.sendSysEx(...SysEx.setButtonColors(...buttons.map((b): number[] => {
+      const button = this.mapButtonFromXy(b.button);
+
+      switch (b.style.style) {
+      case 'palette':
+        return ButtonColor.staticColor(button, validatePaletteColor(b.style.color));
+      case 'off':
+        return ButtonColor.staticColor(button, 0);
+      case 'rgb':
+        return ButtonColor.rgb(button, ...scaleRgbMk3(b.style.rgb));
+      case 'flash':
+        return ButtonColor.flash(
+          button,
+          validatePaletteColor(b.style.color),
+          validatePaletteColor(b.style.colorB ?? 0)
+        );
+      case 'pulse':
+        return ButtonColor.pulse(button, validatePaletteColor(b.style.color));
+      default:
+        throw new Error('Missing style');
+      }
+    })));
+  }
+
+  /**
+   * @inheritDoc
+   */
   allOff(): void {
-    this.sendSysEx(14, 0);
+    this.setButtons(...range(9).flatMap(y => range(9).map(x => ({
+      button: [x, y],
+      // eslint-disable-next-line object-property-newline
+      style: { style: 'palette', color: 0 },
+    } as ButtonStyle))));
   }
 
   /**

@@ -1,7 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import midi from 'midi';
 import { findDevice, onExit } from '../../utils.js';
-import { Button, ButtonIn, EventTypes, ILaunchpad, PaletteColor, RgbColor } from './ILaunchpad.js';
+import { Button, ButtonIn, ButtonStyle, EventTypes, ILaunchpad, PaletteColor, RgbColor, Style } from './ILaunchpad.js';
 
 export interface BaseLaunchpadOptions {
 
@@ -60,6 +60,11 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
    * @inheritDoc
    */
   public abstract allOff(): void;
+
+  /**
+   * @inheritDoc
+   */
+  public abstract setButtons(...buttons: ButtonStyle[]): void;
 
   /**
    * Make a SysEx message from the given payload
@@ -209,4 +214,32 @@ export function validateRgbColor(color: RgbColor): RgbColor {
 
 export function isRgbColor(color: PaletteColor | RgbColor): color is RgbColor {
   return Array.isArray(color);
+}
+
+export function groupByStyle(styles: ButtonStyle[]): GroupedStyles {
+  const ret: GroupedStyles = {
+    flash: [],
+    palette: [],
+    pulse: [],
+    rgb: [],
+    off: [],
+  };
+  for (const obj of styles) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any,no-extra-parens
+    (ret[obj.style.style] as any[]).push(obj);
+  }
+  return ret;
+}
+
+export type ButtonWithStyle<K extends string> = {
+  readonly button: ButtonIn;
+  readonly style: Extract<Style, { style: K }>;
+}
+
+export interface GroupedStyles {
+  readonly palette: Array<ButtonWithStyle<'palette'>>;
+  readonly rgb: Array<ButtonWithStyle<'rgb'>>;
+  readonly flash: Array<ButtonWithStyle<'flash'>>;
+  readonly pulse: Array<ButtonWithStyle<'pulse'>>;
+  readonly off: Array<ButtonWithStyle<'off'>>;
 }

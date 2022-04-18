@@ -57,7 +57,7 @@ lp.once('ready', (deviceName) => {
 });
 ```
 
-## API
+## Low-level API
 
 A number of methods are available to control the button colors on
 the LaunchPad. In all of these methods, the button to control can be
@@ -80,6 +80,18 @@ The follow methods control a button's color:
   to black.
 - `lp.pulse(button, color)`: a button will pulse between black and the given
   palette color.
+
+## Surface API
+
+There is also a buffer-oriented API you can use, which works much like
+how graphics cards work. The class `Surface` addresses the Launchpad grid
+as one or more layers of 9x9 buttons. You can `set` and `get` the individual
+button styles, and call `update()` to send all changes to the Launchpad.
+
+A helper class `Drawing` exists to help with performing common drawing operations.
+
+See the [`examples/surface.js`](./examples/surface.js) example for more information
+on how to use this API.
 
 ## TODO
 

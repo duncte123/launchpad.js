@@ -75,6 +75,22 @@ describe('SysEx messages', () => {
       247
     ]);
   });
+
+  test('setting multiple buttons at once', () => {
+    lp.setButtons(
+      { button: 49, style: { style: 'palette', color: 42 } },
+      { button: 51, style: { style: 'palette', color: 42 } },
+      { button: 52, style: { style: 'rgb', rgb: [1, 0, 1] } },
+      { button: 53, style: { style: 'flash', color: 42 } },
+      { button: 54, style: { style: 'pulse', color: 42 } },
+      { button: 55, style: { style: 'flash', color: 42 } },
+    );
+
+    expect(mockedOutput.sendMessage).toBeCalledWith([...HEADER, 10, /* color */ 49, 42, 51, 42, 247]);
+    expect(mockedOutput.sendMessage).toBeCalledWith([...HEADER, 11, /* rgb */ 52, 63, 0, 63, 247]);
+    expect(mockedOutput.sendMessage).toBeCalledWith([...HEADER, 35, /* flash */ 0, 53, 42, 0, 55, 42, 247]);
+    expect(mockedOutput.sendMessage).toBeCalledWith([...HEADER, 40, /* pulse */ 0, 54, 42, 247]);
+  });
 });
 
 describe('x/y mapping', () => {
