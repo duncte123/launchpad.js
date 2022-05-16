@@ -6,7 +6,6 @@ export * from './launchpads/base/ILaunchpad.js';
 export * from './launchpads/autoDetect.js';
 export * from './launchpadHelpers.js';
 export * as colors from './colorHelpers.js';
-export * as utils from './utils.js';
 export * from './surface/ILayer.js';
 export * from './surface/Surface.js';
 export * from './surface/Drawing.js';

@@ -1,4 +1,4 @@
-import { range } from '../../utils.js';
+import { range } from '../../private/utils.js';
 import { BaseLaunchpad, BaseLaunchpadOptions, isRgbColor, validatePaletteColor, validateRgbColor } from '../base/BaseLaunchpad.js';
 import { Button, ButtonIn, ButtonStyle, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad.js';
 import { ButtonColor } from './ButtonColor.js';
