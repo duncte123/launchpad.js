@@ -1,6 +1,6 @@
 import EventEmitter from 'eventemitter3';
 import midi from 'midi';
-import { findDevice, onExit } from '../../utils.js';
+import { findDevice, onExit } from '../../internal/utils.js';
 import { Button, ButtonIn, ButtonStyle, EventTypes, ILaunchpad, PaletteColor, RgbColor, Style } from './ILaunchpad.js';
 
 export interface BaseLaunchpadOptions {
@@ -33,8 +33,8 @@ export interface BaseLaunchpadOptions {
  * to have a consistent event system across the project every subclass must implement the following events listed.
  */
 export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements ILaunchpad {
-  protected readonly input = new midi.Input();
-  protected readonly output = new midi.Output();
+  private readonly input = new midi.Input();
+  private readonly output = new midi.Output();
   protected open = false;
 
   constructor(protected readonly options: BaseLaunchpadOptions = {}) {
