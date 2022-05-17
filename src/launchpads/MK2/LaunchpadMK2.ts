@@ -1,4 +1,4 @@
-import { CONTROL_NOTE, NORMAL_NOTE } from '../../private/utils.js';
+import { CONTROL_NOTE, NORMAL_NOTE } from '../../internal/utils.js';
 import { BaseLaunchpad, BaseLaunchpadOptions, groupByStyle, isRgbColor, validatePaletteColor, validateRgbColor } from '../base/BaseLaunchpad.js';
 import { Button, ButtonIn, ButtonStyle, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad.js';
 

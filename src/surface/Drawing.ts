@@ -1,7 +1,7 @@
 /* eslint-disable no-empty-function */
 /* eslint-disable no-useless-constructor */
 import { Style } from '../launchpads/base/ILaunchpad.js';
-import { allXy } from '../private/utils.js';
+import { allXy } from '../internal/utils.js';
 import { ILayer } from './ILayer.js';
 
 /**

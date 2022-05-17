@@ -1,6 +1,6 @@
 /* eslint-disable init-declarations */
 import { Style } from '../launchpads/base/ILaunchpad.js';
-import { range } from '../private/utils.js';
+import { range } from '../internal/utils.js';
 import { ILayer } from './ILayer.js';
 
 /**

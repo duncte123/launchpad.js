@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-constructor */
 import { ButtonStyle, ILaunchpad, Style } from '../launchpads/base/ILaunchpad.js';
-import { allXy } from '../private/utils.js';
+import { allXy } from '../internal/utils.js';
 import { ILayer } from './ILayer.js';
 import { Layer } from './Layer.js';
 
