@@ -10,7 +10,7 @@ export class LaunchpadMK2 extends BaseLaunchpad {
   /**
    * @param {LaunchpadMK2Options?} options
    */
-  constructor(options?: LaunchpadMK2Options) {
+  constructor(options?: Partial<LaunchpadMK2Options>) {
     super(options);
 
     this.openMidiDevice(this.options.deviceName ?? LaunchpadMK2.DEFAULT_DEVICE_NAME);

@@ -37,7 +37,7 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
   private readonly output = new midi.Output();
   protected open = false;
 
-  constructor(protected readonly options: BaseLaunchpadOptions = {}) {
+  constructor(protected readonly options: Partial<BaseLaunchpadOptions> = {}) {
     super();
   }
 
@@ -78,10 +78,10 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
    *
    * @param {number} message the message to send to the launchpad
    */
-  protected send(message: number[]): void;
-  protected send(...message: number[]): void;
+  public send(message: number[]): void;
+  public send(...message: number[]): void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  protected send(...message: any[]): void {
+  public send(...message: any[]): void {
     this.logDebug('Sending midi message', message);
     this.output.sendMessage(Array.isArray(message[0]) ? message[0] : message as number[]);
   }
@@ -136,7 +136,7 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
 
   protected setupMessageHandler(): void {
     this.input.on('message', (deltaTime: number, message: number[]) => {
-      this.logDebug(`m: ${message} d: ${deltaTime}`);
+      this.logDebug(`[input] m: ${message} d: ${deltaTime}`);
       this.internalMessageHandler(message);
     });
   }
@@ -175,6 +175,7 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
     return [
       'ready',
       'rawMessage',
+      'outputMsg',
       'buttonDown',
       'buttonUp',
     ];

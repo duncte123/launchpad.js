@@ -104,6 +104,12 @@ export interface ILaunchpad extends EventEmitter<EventTypes> {
 export interface EventTypes {
   ready: (deviceName: string) => void;
   rawMessage: (message: number[]) => void;
+
+  /**
+   * This is a message that is sent from the device to the host. Mainly used by messages like the Device Inquiry
+   * @param message the payload from the device
+   */
+  outputMsg: (deltaTime: number, message: number[]) => void;
   buttonDown: (button: Button) => void;
   buttonUp: (button: Button) => void;
  }

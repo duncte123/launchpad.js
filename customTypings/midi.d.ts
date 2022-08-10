@@ -1,5 +1,6 @@
+// eslint-disable-next-line max-classes-per-file
 declare module 'midi' {
-  import EventEmitter = require("node:events");
+  import EventEmitter = require('node:events');
 
   export class Input extends EventEmitter {
     getPortCount(): number;
