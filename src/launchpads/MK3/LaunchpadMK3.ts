@@ -7,7 +7,7 @@ import { SysEx } from './SysEx.js';
 export type LaunchpadMK3Options = BaseLaunchpadOptions;
 
 export class LaunchpadMK3 extends BaseLaunchpad {
-  public static readonly DEFAULT_DEVICE_NAME = /^Launchpad.*MK3 MIDI/;
+  public static readonly DEFAULT_DEVICE_NAME = /^Launchpad.*MK3 MIDI|^MIDI.* \(LP.*MK3 MIDI\)/
 
   /**
    *
