@@ -37,9 +37,25 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
   private readonly output = new midi.Output();
   protected open = false;
 
-  constructor(protected readonly options: Partial<BaseLaunchpadOptions> = {}) {
+  protected constructor(protected readonly options: Partial<BaseLaunchpadOptions> = {}) {
     super();
   }
+
+  /**
+   * @inheritDoc
+   */
+  public get midiInput(): midi.Input {
+    return this.input;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public get midiOutput(): midi.Output {
+    return this.output;
+  }
+
+
 
   /**
    * @inheritDoc
@@ -175,7 +191,6 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
     return [
       'ready',
       'rawMessage',
-      'outputMsg',
       'buttonDown',
       'buttonUp',
     ];

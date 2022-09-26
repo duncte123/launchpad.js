@@ -1,4 +1,5 @@
 import EventEmitter from 'eventemitter3';
+import midi from 'midi';
 
 /**
  * Abstract interface for interacting with a launchpad
@@ -15,6 +16,20 @@ import EventEmitter from 'eventemitter3';
 // cuz this is an abstract class
 /* eslint-disable no-unused-vars */
 export interface ILaunchpad extends EventEmitter<EventTypes> {
+
+  /**
+   * The midi input device of the connected launchpad, useful for enabling/disabling sysex messages for example or listening to events
+   *
+   * @see https://www.npmjs.com/package/midi
+   */
+  get midiInput(): midi.Input;
+
+  /**
+   * The midi output device of the connected launchpad, useful for sending custom messages to the launchpad
+   *
+   * @see https://www.npmjs.com/package/midi
+   */
+  get midiOutput(): midi.Output;
 
   /**
    * Sets the color for a button on the Launchpad
@@ -104,12 +119,6 @@ export interface ILaunchpad extends EventEmitter<EventTypes> {
 export interface EventTypes {
   ready: (deviceName: string) => void;
   rawMessage: (message: number[]) => void;
-
-  /**
-   * This is a message that is sent from the device to the host. Mainly used by messages like the Device Inquiry
-   * @param message the payload from the device
-   */
-  outputMsg: (deltaTime: number, message: number[]) => void;
   buttonDown: (button: Button) => void;
   buttonUp: (button: Button) => void;
  }
