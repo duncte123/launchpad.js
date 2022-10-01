@@ -55,8 +55,6 @@ export abstract class BaseLaunchpad extends EventEmitter<EventTypes> implements 
     return this.output;
   }
 
-
-
   /**
    * @inheritDoc
    */
