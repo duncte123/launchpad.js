@@ -36,11 +36,11 @@ export function onExit(fn: () => void): void {
   }
 }
 
-export function allDeviceNames(chan: midi.Input): string[] {
+export function allDeviceNames(chan: midi.Input | midi.Output): string[] {
   return range(chan.getPortCount()).map(i => chan.getPortName(i));
 }
 
-export function findDevice(regex: RegExp, midiInput: midi.Input): number {
+export function findDevice(regex: RegExp, midiInput: midi.Input | midi.Output): number {
   const ports = allDeviceNames(midiInput);
   const index = ports.findIndex(p => p.match(regex));
 

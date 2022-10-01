@@ -1,6 +1,7 @@
 /* eslint-disable object-property-newline */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable init-declarations */
+import { mockedInput, mockedOutput } from './mocking-midi';
 import EventEmitter from 'eventemitter3';
 import { EventTypes, ILaunchpad, Surface } from '../src';
 
@@ -14,6 +15,8 @@ function mockedLaunchPad() {
       setButtons: jest.fn(),
       allOff: jest.fn(),
       close: jest.fn(),
+      midiInput: mockedInput,
+      midiOutput: mockedOutput,
     }
   ));
 }
