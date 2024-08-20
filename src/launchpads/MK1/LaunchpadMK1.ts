@@ -70,10 +70,10 @@ export class LaunchpadMK1 extends BaseLaunchpad {
    *
    * @param button - The button to set the color for.
    * @param color  - The color to set for the button.
-   * @param flash  - Specifies if the button should flash.
+   * @param pulse  - Specifies if the button should pulse.
    */
-  public setButtonColor(button: ButtonIn, color: RgColor | RgbColor | Velocity, flash: boolean = false): void {
-    this.writeButtonColor(button, color, flash);
+  public setButtonColor(button: ButtonIn, color: RgColor | RgbColor | Velocity, pulse: boolean = false): void {
+    this.writeButtonColor(button, color, pulse);
   }
 
   /** @inheritDoc */
@@ -83,7 +83,7 @@ export class LaunchpadMK1 extends BaseLaunchpad {
   }
 
   /**
-   * Method to flash a button on the Launchpad in a specified color.
+   * Method to pulse a button on the Launchpad between "off" and a specified color.
    *
    * The button can be specified as a button number (launchpad specific), an `[x, y]`
    *   value, or a `Button` object.
@@ -91,6 +91,8 @@ export class LaunchpadMK1 extends BaseLaunchpad {
    * The color can be either a velocity value returned by `lp.velocity()`,
    *   or an RG(B) tuple where the values for red and green are in range `0..3`.
    *   The value for blue has no effect on Launchpad MK1.
+   *
+   * **NOTE**: This behavior doesn't differ from using `lp.pulse()` on Launchpad MK1.
    *
    * **NOTE**: On Launchpad MK1, button `[0, 0]` (on the top-left) and button `[8, 7]`
    *   both have ID `104`, which means that therefore either one of them, in this case
@@ -159,7 +161,7 @@ export class LaunchpadMK1 extends BaseLaunchpad {
   }
 
   /**
-   * Method to flash a button on the Launchpad in a specified color.
+   * Method to pulse a button on the Launchpad between "off" and a specified color.
    *
    * The button can be specified as a button number (launchpad specific), an `[x, y]`
    *   value, or a `Button` object.
@@ -167,8 +169,6 @@ export class LaunchpadMK1 extends BaseLaunchpad {
    * The color can be either a velocity value returned by `lp.velocity()`,
    *   or an RG(B) tuple where the values for red and green are in range `0..3`.
    *   The value for blue has no effect on Launchpad MK1.
-   *
-   * **NOTE**: This behavior doesn't differ from using `lp.flash()` on Launchpad MK1.
    *
    * **NOTE**: On Launchpad MK1, button `[0, 0]` (on the top-left) and button `[8, 7]`
    *   both have ID `104`, which means that therefore either one of them, in this case
@@ -224,13 +224,13 @@ export class LaunchpadMK1 extends BaseLaunchpad {
    * Method to calculate a *Velocity* value.
    *
    * @param color - Either a velocity value (`0..63`) or RG(B) color (`[0..3, 0..3[, number]]`)
-   * @param flash - Specifies if the button should flash.
+   * @param pulse - Specifies if the button should pulse.
    * @returns A *Velocity* value.
    */
   public velocity(color: Velocity): Velocity;
-  public velocity(color: RgColor | RgbColor, flash?: boolean): Velocity;
-  public velocity(color: RgColor | RgbColor | Velocity, flash?: boolean): Velocity;
-  public velocity(color: RgColor | RgbColor | Velocity, flash: boolean = false): Velocity {
+  public velocity(color: RgColor | RgbColor, pulse?: boolean): Velocity;
+  public velocity(color: RgColor | RgbColor | Velocity, pulse?: boolean): Velocity;
+  public velocity(color: RgColor | RgbColor | Velocity, pulse: boolean = false): Velocity {
     if (typeof color === 'number') {
       if (color < 0 || color > 63) {
         throw Error('Color value must be within range 0..63!');
@@ -240,7 +240,7 @@ export class LaunchpadMK1 extends BaseLaunchpad {
     if (Math.max(color[0], color[1]) > 3) {
       throw Error('Red/green color value must be within range 0..3!');
     }
-    return (color[1] * 16) + color[0] + (flash ? 8 : 12);
+    return (color[1] * 16) + color[0] + (pulse ? 8 : 12);
   }
 
   /** @inheritDoc */
@@ -252,18 +252,18 @@ export class LaunchpadMK1 extends BaseLaunchpad {
     this.sendSysEx(176, 0, 40);
   }
 
-  protected writeButtonColor(button: ButtonIn, color: RgColor | RgbColor | Velocity, flash: boolean = false, updateFlashTimer: boolean = true): void {
+  protected writeButtonColor(button: ButtonIn, color: RgColor | RgbColor | Velocity, pulse: boolean = false, updatePulseTimer: boolean = true): void {
     const mappedButton = this.mapButtonFromXy(button);
     if (
       (Array.isArray(button) && button[1] === 0) ||
       (typeof button === 'number' && button > 104 && button < 112)
     ) {
-      this.sendSysEx(176, mappedButton, this.velocity(color, flash));
+      this.sendSysEx(176, mappedButton, this.velocity(color, pulse));
     } else {
-      this.sendSysEx(144, this.mapButtonFromXy(button), this.velocity(color, flash));
+      this.sendSysEx(144, this.mapButtonFromXy(button), this.velocity(color, pulse));
     }
     // Restart flash timer on the device
-    if (flash === true && updateFlashTimer === true) {
+    if (pulse === true && updatePulseTimer === true) {
       this.restartFlashTimer();
     }
   }
