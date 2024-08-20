@@ -224,7 +224,8 @@ export class LaunchpadMK1 extends BaseLaunchpad {
    * Method to calculate a *Velocity* value.
    *
    * @param color - Either a velocity value (`0..63`) or RG(B) color (`[0..3, 0..3[, number]]`)
-   * @param flash - Either a velocity value (`0..63`) or RG(B) color (`[0..3, 0..3[, number]]`)
+   * @param flash - Specifies if the button should flash.
+   * @returns A *Velocity* value.
    */
   public velocity(color: Velocity): Velocity;
   public velocity(color: RgColor | RgbColor, flash?: boolean): Velocity;

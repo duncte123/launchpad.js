@@ -152,7 +152,7 @@ Cached in this repository:
 
 Programmers references are subject to change, check the latest resources on [Novation Music's website](https://novationmusic.com/ "Visit website").
 
-Rights of the programmers references belong to [Novation Music](https://novationmusic.com/ "Visit website") ([Focusrite Audio Engineering Limited](https://focusrite.com/about-us "Visit website")).
+Rights of the programmers references respectively belong to [Novation Music](https://novationmusic.com/ "Visit website") ([Focusrite Audio Engineering Limited](https://focusrite.com/about-us "Visit website")).
 
 
 ## Notice
