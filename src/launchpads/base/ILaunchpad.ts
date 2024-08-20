@@ -121,7 +121,7 @@ export interface EventTypes {
   rawMessage: (message: number[]) => void;
   buttonDown: (button: Button) => void;
   buttonUp: (button: Button) => void;
- }
+}
 
 /**
  * Buttons reported by events
@@ -146,6 +146,15 @@ export interface Button {
 }
 
 /**
+ * Specifies the button layout of a Launchpad starting from top-left.
+ *
+ * Each value specifies the ID of the button.
+ *
+ * @since 3.4.0
+ */
+export type ButtonLayout = number[][];
+
+/**
  * Button accepted by the API
  *
  * Either a pure button number, x/y coordinates, or a Button
@@ -157,6 +166,31 @@ export type ButtonIn = number | [number, number] | Button;
  * A color specified by R, G and B components between 0..1
  */
 export type RgbColor = [number, number, number];
+
+/**
+ * Specifies red and green color values for the Launchpad MK1, where:
+ * - `0` is off.
+ * - `1` is low brightness.
+ * - `2` is medium brightness.
+ * - `3` is full brightness.
+ *
+ * @example [red, green]
+ * @example [3, 0]
+ *
+ * @since 3.4.0
+ */
+export type RgColor = [RgColorValue, RgColorValue];
+
+/**
+ * Specifies red/green color value for the Launchpad MK1, where:
+ * - `0` is off.
+ * - `1` is low brightness.
+ * - `2` is medium brightness.
+ * - `3` is full brightness.
+ *
+ * @since 3.4.0
+ */
+export type RgColorValue = 0 | 1 | 2 | 3;
 
 /**
  * A color specified by an index into the Launchpad 128-color palette
@@ -188,3 +222,30 @@ export type Style =
   | { readonly style: 'pulse'; readonly color: number }
   | { readonly style: 'rgb'; readonly rgb: RgbColor }
   | { readonly style: 'off' };
+
+/**
+ * Specifies a *Velocity* value for a button on the Launchpad MK1.
+ *
+ * A velocity value determines the color and flash mode of a button
+ *   and is calculated using the following formula:
+ * ```txt
+ * Red/Green = 0   off.
+ *             1   low brightness.
+ *             2   medium brightness.
+ *             3   full brightness.
+ *
+ * Velocity  = (16 x Green)
+ *           + Red
+ *           + Flags
+ *
+ * Flags     = 12  for normal use.
+ *             8   to make the LED flash.
+ *             0   if using double-buffering.
+ *
+ * ```
+ *
+ * Use `lp.velocity()` on `LaunchpadMK1` for easy calculation.
+ *
+ * @since 3.4.0
+ */
+export type Velocity = number;

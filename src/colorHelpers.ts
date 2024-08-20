@@ -1,5 +1,5 @@
 import convert from 'color-convert';
-import { RgbColor } from './launchpads/base/ILaunchpad.js';
+import { RgbColor, RgColor } from './launchpads/base/ILaunchpad.js';
 
 export const defaultColors: Record<string, RgbColor> = {
   off: [0, 0, 0],
@@ -7,6 +7,26 @@ export const defaultColors: Record<string, RgbColor> = {
   green: [0, 1, 0],
   blue: [0, 0, 1],
   orange: [1, 0.26984127, 0],
+};
+
+/**
+ * Specifies pre-defined colors for the legacy Launchpad (MK1).
+ *
+ * @since 3.4.0
+ */
+export const legacyColors: Record<LegacyColor, RgColor> = {
+  off: [0, 0],
+  redLow: [1, 0],
+  redMedium: [1, 0],
+  red: [3, 0],
+  amberLow: [1, 1],
+  amberMedium: [2, 2],
+  amber: [3, 3],
+  yellowMedium: [1, 2],
+  yellow: [2, 3],
+  greenLow: [0, 1],
+  greenMedium: [0, 2],
+  green: [0, 3],
 };
 
 /**
@@ -41,3 +61,10 @@ export function colorFromHex(hex: string): RgbColor {
     // scale the colors to fit between, 0-63
     .map((v: number) => v / 255) as RgbColor;
 }
+
+/**
+ * Specifies names of pre-defined colors for the legacy Launchpad (MK1).
+ *
+ * @since 3.4.0
+ */
+export type LegacyColor = 'off' | 'redLow' | 'redMedium' | 'red' | 'amberLow' | 'amberMedium' | 'amber' | 'yellowMedium' | 'yellow' | 'greenLow' | 'greenMedium' | 'green';

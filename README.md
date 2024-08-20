@@ -11,15 +11,21 @@ After re-writing a broken launchpad library I decided to release the library to 
 
 Some sample programs can be found in the [examples folder](./examples).
 
+
+
 ## Launchpad models currently supported
 
+- Launchpad MK1 ([limited support][limited-support-mk1])
 - Launchpad MK2
 - Launchpad MK3 (only tested with Mini)
+
 
 ### Why are only these launchpads supported?
 
 These launchpads are supported because I own them myself and have been able to test them.
 If a launchpad is not listed here it means that I do not own one and have not been able to test that one with the program.
+
+
 
 ## Examples
 
@@ -57,6 +63,8 @@ lp.once('ready', (deviceName) => {
 });
 ```
 
+
+
 ## Low-level API
 
 A number of methods are available to control the button colors on
@@ -81,6 +89,8 @@ The follow methods control a button's color:
 - `lp.pulse(button, color)`: a button will pulse between black and the given
   palette color.
 
+
+
 ## Surface API
 
 There is also a buffer-oriented API you can use, which works much like
@@ -93,16 +103,60 @@ A helper class `Drawing` exists to help with performing common drawing operation
 See the [`examples/surface.js`](./examples/surface.js) example for more information
 on how to use this API.
 
+
+
+## Limited support for the legacy Launchpad MK1
+
+[limited-support-mk1]: #limited-support-for-the-legacy-launchpad-mk1 "Jump to section"
+
+Launchpad MK1 offers less functionality over newer models and therefore has some limitations.
+The implementation for Launchpad MK1 aims to be forward compatible with functionality of this package that
+was added with newer models in mind, though there are some differences as specified in this section.
+
+
+### Colors
+
+Buttons on Launchpad MK1 only have two LEDs, red and green, with four states each:
+- `0` off.
+- `1` low brightness.
+- `2` medium brightness.
+- `3` full brightness.
+
+This means color values used by methods `lp.setButtonColor()`, `lp.flash()` and `lp.pulse()`
+  are restricted to the following values:
+- `[r, g]`, a tuple of red and green values in range `0..3`.
+- `[r, g, b]`, a tuple of red, green and blue values in range `0..3`. The value for blue is ignored.
+- `number` in range `0..63`, specifying a *Velocity* value as specified in the developer reference.
+  *Velocity* values can be calculated by using method `lp.velocity()`.
+
+
+### Flashing buttons
+
+Buttons on Launchpad MK1 can only **pulse** between off and a specified color, it does not support **flash**ing
+  between two specified colors. This results in method `lp.flash()` only accepting one color argument and
+  thus providing the exact same signature and functionality as `lp.pulse()`.
+
+
+
 ## TODO
 
 - Add support for the same launchpads as launchpad.py
 
-### Links
 
-- [Launchpad developer manual](https://resource.novationmusic.com/support/product-downloads?product=Launchpad)
+## Resources
 
-### Notice
+Cached in this repository:
+- [Launchpad (MK1) programmers reference](./resources/launchpad-mk1-programmers-reference.pdf)
+- [Launchpad MK2 programmers reference](./resources/launchpad-mk2-programmers-reference-v1.03.pdf)
+- [Launchpad Mini MK3 programmers reference](./resources/launchpad-mk3-mini-programmers-reference.pdf)
 
-This project contains modified code from https://github.com/Lokua/launchpad which was released under the MIT license
+Programmers references are subject to change, check the latest resources on [Novation Music's website](https://novationmusic.com/ "Visit website").
+
+Rights of the programmers references belong to [Novation Music](https://novationmusic.com/ "Visit website") ([Focusrite Audio Engineering Limited](https://focusrite.com/about-us "Visit website")).
+
+
+## Notice
+
+This project contains modified code from https://github.com/Lokua/launchpad which was released under the MIT license.
 
 [rewards-interaction]: https://github.com/duncte123/rewards-interaction
