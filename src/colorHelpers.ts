@@ -16,17 +16,17 @@ export const defaultColors: Record<string, RgbColor> = {
  */
 export const legacyColors: Record<LegacyColor, RgColor> = {
   off: [0, 0],
-  redLow: [1, 0],
-  redMedium: [1, 0],
-  red: [3, 0],
-  amberLow: [1, 1],
-  amberMedium: [2, 2],
-  amber: [3, 3],
-  yellowMedium: [1, 2],
-  yellow: [2, 3],
-  greenLow: [0, 1],
-  greenMedium: [0, 2],
-  green: [0, 3],
+  redLow: [0.1, 0],
+  redMedium: [0.1, 0],
+  red: [1, 0],
+  amberLow: [0.1, 0.1],
+  amberMedium: [0.5, 0.5],
+  amber: [1, 1],
+  yellowMedium: [0.1, 0.5],
+  yellow: [0.5, 1],
+  greenLow: [0, 0.1],
+  greenMedium: [0, 0.5],
+  green: [0, 1],
 };
 
 /**

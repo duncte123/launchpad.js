@@ -27,6 +27,12 @@ If a launchpad is not listed here it means that I do not own one and have not be
 
 
 
+## Installation
+
+Install from NPM using `npm i launchpad.js` and make sure you have drivers installed for your device.
+
+
+
 ## Examples
 
 More examples can be found in the [examples folder](./examples), this is just a simple button listener.
@@ -110,24 +116,36 @@ on how to use this API.
 [limited-support-mk1]: #limited-support-for-the-legacy-launchpad-mk1 "Jump to section"
 
 Launchpad MK1 offers less functionality over newer models and therefore has some limitations.
-The implementation for Launchpad MK1 aims to be forward compatible with functionality of this package that
-was added with newer models in mind, though there are some differences as specified in this section.
+  As a result of the implementation for the MK1 being retro-fitted into this package, that has
+  been designed to work with more advanced models, the API for MK1 isn't fully compatible with
+  that of newer models. The differences are specified in this section.
 
 
 ### Colors
 
-Buttons on Launchpad MK1 only have two LEDs, red and green, with four states each:
+Buttons on Launchpad MK1 only have two LEDs, red and green, that can output four intensities each:
 - `0` off.
 - `1` low brightness.
 - `2` medium brightness.
 - `3` full brightness.
 
-This means color values used by methods `lp.setButtonColor()`, `lp.flash()` and `lp.pulse()`
-  are restricted to the following values:
-- `[r, g]`, a tuple of red and green values in range `0..3`.
-- `[r, g, b]`, a tuple of red, green and blue values in range `0..3`. The value for blue is ignored.
-- `number` in range `0..63`, specifying a *Velocity* value as specified in the developer reference.
-  *Velocity* values can be calculated by using method `lp.velocity()`.
+This means the MK1 can only display a few different colors and that `RgColor` and `RgbColor` values (in range
+  `0..1`) consumed by methods like `lp.setButtonColor()`, `lp.flash()` and `lp.pulse()` are converted to either
+  one of the four color intensities. See type `RgColor` for more information on this conversion.
+
+Because there is no blue LED, methods that consume an `RgbColor` value also accept `RgColor` values.
+
+
+### Color palette
+
+The Launchpad MK1 doesn't have a color palette. Methods that consume a `PaletteColor` may instead accept a
+  `Velocity` value (specific to MK1). See method `lp.velocity()` and type `Velocity` for more information.
+
+Methods that exclusively consume `PaletteColor`s on newer models (being `lp.flash()` and `lp.pulse()`) instead
+  accept an `RgColor`, `RgbColor` or `Velocity` value on Launchpad MK1.
+
+Method `lp.setButtons()` uses different styles (`Mk1ButtonStyle` and `Mk1Style`) due to color palettes not being
+  available, see type `Mk1Style` for more information.
 
 
 ### Flashing buttons

@@ -1,8 +1,8 @@
 import { CONTROL_NOTE, NORMAL_NOTE } from '../../internal/utils.js';
 import { BaseLaunchpad, BaseLaunchpadOptions } from '../base/BaseLaunchpad.js';
-import { Button, ButtonIn, ButtonLayout, ButtonStyle, isButton, RgbColor, RgColor, Velocity } from '../base/ILaunchpad.js';
+import { Button, ButtonIn, ButtonLayout, ColorIntensity, isButton, Mk1ButtonStyle, RgbColor, RgColor, Velocity } from '../base/ILaunchpad.js';
 
-/* eslint-disable no-extra-parens */
+/* eslint-disable max-lines,no-extra-parens */
 
 /** @since 3.4.0 */
 export type LaunchpadMK1Options = BaseLaunchpadOptions;
@@ -56,8 +56,7 @@ export class LaunchpadMK1 extends BaseLaunchpad {
    *   value, or a `Button` object.
    *
    * The color can be either a velocity value returned by `lp.velocity()`,
-   *   or an RG(B) tuple where the values for red and green are in range `0..3`.
-   *   The value for blue has no effect on Launchpad MK1.
+   *   or an RG(B) tuple with values in range `0..1`.
    *
    * **NOTE**: On Launchpad MK1, button `[0, 0]` (on the top-left) and button `[8, 7]`
    *   both have ID `104`, which means that therefore either one of them, in this case
@@ -69,8 +68,15 @@ export class LaunchpadMK1 extends BaseLaunchpad {
    * - `lp.setButtonColor([0, 0], color)` Targets button `104` at `[0, 0]`.
    *
    * @param button - The button to set the color for.
-   * @param color  - The color to set for the button.
-   * @param pulse  - Specifies if the button should pulse.
+   * @param color
+   * The color to set for the button.
+   *
+   * Limitations on Launchpad MK1:
+   * - Only a limited number of colors can be displayed. See `type RgColor` for more information.
+   * - The value for blue has no effect and can be omitted as there is no blue LED.
+   * - There is no color palette, instead you can specify a `Velocity` value. See
+   *     `type Velocity` for more information.
+   * @param pulse - Specifies if the button should pulse.
    */
   public setButtonColor(button: ButtonIn, color: RgColor | RgbColor | Velocity, pulse: boolean = false): void {
     this.writeButtonColor(button, color, pulse);
@@ -89,10 +95,11 @@ export class LaunchpadMK1 extends BaseLaunchpad {
    *   value, or a `Button` object.
    *
    * The color can be either a velocity value returned by `lp.velocity()`,
-   *   or an RG(B) tuple where the values for red and green are in range `0..3`.
-   *   The value for blue has no effect on Launchpad MK1.
+   *   or an RG(B) tuple with values in range `0..1`.
    *
-   * **NOTE**: This behavior doesn't differ from using `lp.pulse()` on Launchpad MK1.
+   * Limitations on Launchpad MK1:
+   * - The behavior doesn't differ from using `pulse()`.
+   * - See limitations on parameter `color` below.
    *
    * **NOTE**: On Launchpad MK1, button `[0, 0]` (on the top-left) and button `[8, 7]`
    *   both have ID `104`, which means that therefore either one of them, in this case
@@ -104,7 +111,14 @@ export class LaunchpadMK1 extends BaseLaunchpad {
    * - `lp.flash([0, 0], color)` Targets button `104` at `[0, 0]`.
    *
    * @param button - The button to set the color for.
-   * @param color  - The color to set for the button.
+   * @param color
+   * The color to set for the button.
+   *
+   * Limitations on Launchpad MK1:
+   * - Only a limited number of colors can be displayed. See `type RgColor` for more information.
+   * - The value for blue has no effect and can be omitted as there is no blue LED.
+   * - There is no color palette, instead you can specify a `Velocity` value. See
+   *     `type Velocity` for more information.
    */
   public flash(button: ButtonIn, color: RgColor | RgbColor | Velocity): void {
     this.writeButtonColor(button, color, true);
@@ -167,8 +181,7 @@ export class LaunchpadMK1 extends BaseLaunchpad {
    *   value, or a `Button` object.
    *
    * The color can be either a velocity value returned by `lp.velocity()`,
-   *   or an RG(B) tuple where the values for red and green are in range `0..3`.
-   *   The value for blue has no effect on Launchpad MK1.
+   *   or an RG(B) tuple with values in range `0..1`.
    *
    * **NOTE**: On Launchpad MK1, button `[0, 0]` (on the top-left) and button `[8, 7]`
    *   both have ID `104`, which means that therefore either one of them, in this case
@@ -178,6 +191,16 @@ export class LaunchpadMK1 extends BaseLaunchpad {
    * Example:
    * - `lp.pulse(104, color)` Targets button `104` at `[8, 7]`.
    * - `lp.pulse([0, 0], color)` Targets button `104` at `[0, 0]`.
+   *
+   * @param button - The button to set the color for.
+   * @param color
+   * The color to set for the button.
+   *
+   * Limitations on Launchpad MK1:
+   * - Only a limited number of colors can be displayed. See `type RgColor` for more information.
+   * - The value for blue has no effect and can be omitted as there is no blue LED.
+   * - There is no color palette, instead you can specify a `Velocity` value. See
+   *     `type Velocity` for more information.
    */
   public pulse(button: ButtonIn, color: RgColor | RgbColor | Velocity): void {
     this.writeButtonColor(button, color, true);
@@ -186,7 +209,14 @@ export class LaunchpadMK1 extends BaseLaunchpad {
   /**
    * Method to update multiple buttons at once.
    *
-   * Accepts a variable number of `ButtonStyle` objects.
+   * Accepts a variable number of `Mk1ButtonStyle` objects.
+   *
+   * Limitations on Launchpad MK1:
+   * - Uses different color values for styling, see `type Mk1Style` for more information.
+   * - Only a limited number of colors can be displayed. See `type RgColor` for more information.
+   * - The value for blue has no effect and can be omitted as there is no blue LED.
+   * - There is no color palette, instead of a palette color value you can specify a `Velocity`
+   *     value. See `type Velocity` for more information.
    *
    * **NOTE**: On Launchpad MK1, button `[0, 0]` (on the top-left) and button `[8, 7]`
    *   both have ID `104`, which means that therefore either one of them, in this case
@@ -196,14 +226,17 @@ export class LaunchpadMK1 extends BaseLaunchpad {
    * Example:
    * - `lp.setButtons({ button: 104, ... });` Targets button `104` at `[8, 7]`.
    * - `lp.setButtons({ button: [0, 0], ... })` Targets button `104` at `[0, 0]`.
+   *
+   * @param buttons The buttons to set.
    */
-  public setButtons(...buttons: ButtonStyle[]): void {
+  public setButtons(...buttons: Mk1ButtonStyle[]): void {
     buttons.forEach((config) => {
       switch (config.style.style) {
       case 'flash':
         this.writeButtonColor(config.button, config.style.color, true, false);
         break;
       case 'palette':
+      case 'velocity':
         this.writeButtonColor(config.button, config.style.color, false, false);
         break;
       case 'pulse':
@@ -223,9 +256,14 @@ export class LaunchpadMK1 extends BaseLaunchpad {
   /**
    * Method to calculate a *Velocity* value.
    *
-   * @param color - Either a velocity value (`0..63`) or RG(B) color (`[0..3, 0..3[, number]]`)
-   * @param pulse - Specifies if the button should pulse.
-   * @returns A *Velocity* value.
+   * @param color
+   * Either a `Velocity` value in range `0..63` or RG(B) tuple with values in range `0..1`.
+   *
+   * Notes:
+   * - Only a limited number of colors can be displayed. See `type RgColor` for more information.
+   * - The value for blue is omitted as there is no blue LED.
+   * @param pulse - Specifies if the button should pulse, omitted if `color` contains a `Velocity` value.
+   * @returns A `Velocity` value.
    */
   public velocity(color: Velocity): Velocity;
   public velocity(color: RgColor | RgbColor, pulse?: boolean): Velocity;
@@ -233,14 +271,14 @@ export class LaunchpadMK1 extends BaseLaunchpad {
   public velocity(color: RgColor | RgbColor | Velocity, pulse: boolean = false): Velocity {
     if (typeof color === 'number') {
       if (color < 0 || color > 63) {
-        throw Error('Color value must be within range 0..63!');
+        throw Error('Launchpad MK1 only accepts Velocity values in range 0..63!');
       }
       return color;
     }
-    if (Math.max(color[0], color[1]) > 3) {
-      throw Error('Red/green color value must be within range 0..3!');
+    if (Math.max(color[0], color[1]) > 1 || Math.min(color[0], color[1]) < 0) {
+      throw Error('Red/green color value must be within range 0..1!');
     }
-    return (color[1] * 16) + color[0] + (pulse ? 8 : 12);
+    return (this.scaleColor(color[1]) * 16) + this.scaleColor(color[0]) + (pulse ? 8 : 12);
   }
 
   /** @inheritDoc */
@@ -250,6 +288,23 @@ export class LaunchpadMK1 extends BaseLaunchpad {
 
   protected restartFlashTimer(): void {
     this.sendSysEx(176, 0, 40);
+  }
+
+  /**
+   * @param color - Color value in range `0..1`.
+   * @returns A `ColorIntensity` value consumed by the device.
+   *
+   * @since 3.4.4
+   */
+  protected scaleColor(color: number): ColorIntensity {
+    if (color <= 0) {
+      return 0;
+    } else if (color < (1 / 3)) { // 33%
+      return 1;
+    } else if (color < (1 / 1.5)) { // 66%
+      return 2;
+    }
+    return 3;
   }
 
   protected writeButtonColor(button: ButtonIn, color: RgColor | RgbColor | Velocity, pulse: boolean = false, updatePulseTimer: boolean = true): void {
