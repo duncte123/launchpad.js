@@ -143,16 +143,13 @@ Buttons on Launchpad MK1 can only **pulse** between off and a specified color, i
 - Add support for the same launchpads as launchpad.py
 
 
-## Resources
+## Related resources
 
-Cached in this repository:
-- [Launchpad (MK1) programmers reference](./resources/launchpad-mk1-programmers-reference.pdf)
-- [Launchpad MK2 programmers reference](./resources/launchpad-mk2-programmers-reference-v1.03.pdf)
-- [Launchpad Mini MK3 programmers reference](./resources/launchpad-mk3-mini-programmers-reference.pdf)
+- [Launchpad (MK1) programmers reference](https://web.archive.org/web/20240521041224/https://fael-downloads-prod.focusrite.com/customer/prod/downloads/launchpad-programmers-reference.pdf "View on archive.org") (archived)
+- [Launchpad MK2 programmers reference](http://web.archive.org/web/20231011173853/https://fael-downloads-prod.focusrite.com/customer/prod/s3fs-public/downloads/Launchpad%20MK2%20Programmers%20Reference%20Manual%20v1.03.pdf "View on archive.org") (archived)
+- [Launchpad Mini MK3 programmers reference](https://web.archive.org/web/20240127061723/https://fael-downloads-prod.focusrite.com/customer/prod/s3fs-public/downloads/Launchpad%20Mini%20-%20Programmers%20Reference%20Manual.pdf "View on archive.org") (archived)
 
-Programmers references are subject to change, check the latest resources on [Novation Music's website](https://novationmusic.com/ "Visit website").
-
-Rights of the programmers references respectively belong to [Novation Music](https://novationmusic.com/ "Visit website") ([Focusrite Audio Engineering Limited](https://focusrite.com/about-us "Visit website")).
+More recent versions of programmers references may be available on [Novation Music's website](https://novationmusic.com/ "Visit website").
 
 
 ## Notice
