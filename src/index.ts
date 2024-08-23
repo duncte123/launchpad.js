@@ -1,5 +1,6 @@
 import SegfaultHandler from 'segfault-handler';
 
+export * from './launchpads/MK1/LaunchpadMK1.js';
 export * from './launchpads/MK2/LaunchpadMK2.js';
 export * from './launchpads/MK3/LaunchpadMK3.js';
 export * from './launchpads/base/ILaunchpad.js';
