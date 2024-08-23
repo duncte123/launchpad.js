@@ -19,6 +19,10 @@ Some sample programs can be found in the [examples folder](./examples).
 - Launchpad MK2
 - Launchpad MK3 (only tested with Mini)
 
+### Dummy launchpad
+
+This library contains a `DummyLaunchpad` class. This can be used to test calls even if you don't have a launchpad attached/
+
 
 ### Why are only these launchpads supported?
 
