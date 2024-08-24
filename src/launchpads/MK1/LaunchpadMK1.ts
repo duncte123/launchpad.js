@@ -164,7 +164,7 @@ export class LaunchpadMK1 extends BaseLaunchpad {
         // we use divide and use the rest of 16 because
         // there's 16 (virtual) buttons in a row.
         note % 16, // x
-        Math.floor(note / 16), // y
+        Math.floor(note / 16) + 1, // y
       ];
     }
 
