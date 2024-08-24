@@ -1,6 +1,6 @@
 {
   "name": "launchpad.js",
-  "version": "3.4.4",
+  "version": "3.4.5",
   "description": "A javascript api to control your Novation launchpads",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
