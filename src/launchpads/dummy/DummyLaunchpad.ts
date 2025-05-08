@@ -1,15 +1,11 @@
 import { CONTROL_NOTE, NORMAL_NOTE } from '../../internal/utils.js';
-import { BaseLaunchpad, BaseLaunchpadOptions } from '../base/BaseLaunchpad';
+import { BaseLaunchpad } from '../base/BaseLaunchpad';
 import { Button, ButtonIn, ButtonStyle, isButton, PaletteColor, RgbColor } from '../base/ILaunchpad';
 
 /**
  * A dummy launchpad that has the size of a mk2
  */
 export class DummyLaunchpad extends BaseLaunchpad {
-  constructor(options?: Partial<BaseLaunchpadOptions>) {
-    super(options);
-  }
-
   allOff(): void {
     this.logCall('allOff');
   }
@@ -62,7 +58,8 @@ export class DummyLaunchpad extends BaseLaunchpad {
       ];
     }
 
-    return { nr: note, xy };
+    return { nr: note,
+      xy };
   }
 
   pulse(button: ButtonIn, color: number): void {
